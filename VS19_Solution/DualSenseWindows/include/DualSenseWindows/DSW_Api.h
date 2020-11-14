@@ -13,6 +13,8 @@
 #define DS5W_API __declspec(dllexport)
 #elif defined(DS5W_BUILD_LIB)
 #define DS5W_API
+#elif defined(DS5W_USE_LIB)
+#define DS5W_API
 #else
 #define DS5W_API __declspec(dllimport)
 #endif
