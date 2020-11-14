@@ -1,0 +1,5 @@
+**/VS19_Solution/bin/
+**.exe
+
+# Visual studio files
+.vs/
