@@ -42,6 +42,7 @@ namespace DS5W {
 			/// Connection type of the discoverd device
 			/// </summary>
 			DevCnt connection;
+			unsigned short inputReportByteLength;
 		} _internal;
 	} DeviceEnumInfo, DevEInf;
 
@@ -76,7 +77,8 @@ namespace DS5W {
 			/// <summary>
 			/// HID Input buffer
 			/// </summary>
-			unsigned char hidBuffer[64];
+			unsigned char* hidBuffer;	//To replace with input report byte length
+			unsigned short inputReportByteLength;
 		}_internal;
 	} DeviceContext, DevCtx;
 }
