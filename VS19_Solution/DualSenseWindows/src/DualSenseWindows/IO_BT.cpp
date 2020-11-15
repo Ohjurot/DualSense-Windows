@@ -57,4 +57,14 @@ void __DS5W::BT::evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5Inp
 	ptrInputState->touchPoint1 = { 0 , 0 };
 	ptrInputState->touchPoint2 = { 0 , 0 };
 	ptrInputState->headPhoneConnected = false;
+	ptrInputState->leftTriggerFeedback = 0;
+	ptrInputState->rightTriggerFeedback = 0;
+}
+
+void __DS5W::BT::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState) {
+	// Cleat all input data
+	ZeroMemory(hidOutBuffer, 48);
+
+	// Report type output
+	hidOutBuffer[0x00] = 0x02;
 }

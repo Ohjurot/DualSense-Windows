@@ -7,6 +7,8 @@
 
 	Licensed under the MIT License (To be found in repository root directory)
 */
+
+#include <DualSenseWindows/TriggerFX.h>
 #include <DualSenseWindows/IO.h>
 #include <DualSenseWindows/IO_BT.h>
 #include <DualSenseWindows/IO_USB.h>
@@ -190,18 +192,18 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 	wcscpy_s(ptrContext->_internal.devicePath, 260, ptrEnumInfo->_internal.path);
 
 	// Get input report length
-	unsigned short inputReportLength = 0;
+	unsigned short reportLength = 0;
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
 		// The bluetooth input report is 78 Bytes long
-		inputReportLength = 78;
+		reportLength = 547;
 	}
 	else {
 		// The usb input report is 64 Bytes long
-		inputReportLength = 64;
+		reportLength = 64;
 	}
 
 	// TODO: Replace with proper memory allocation routine
-	ptrContext->_internal.hidBuffer = (unsigned char*)calloc(inputReportLength, sizeof(unsigned char));
+	ptrContext->_internal.hidBuffer = (unsigned char*)calloc(reportLength, sizeof(unsigned char));
 	
 	// Return OK
 	return DS5W_OK;
@@ -210,9 +212,17 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
 	// Check if handle is existing
 	if (ptrContext->_internal.deviceHandle) {
+		// Create trigger move back report
+		DS5W::TriggerFX_Pos pos;
+		pos.type = DS5W_TRIGGER_FXTYPE_POS;
+		pos.position = 0x00;
+
 		// Send zero output report to disable all onging outputs
 		DS5W::DS5OutputState os;
 		ZeroMemory(&os, sizeof(DS5W::DS5OutputState));
+
+		os.ptrLeftTriggerEffect = &pos;
+		os.ptrRightTriggerEffect = &pos;
 		DS5W::setDeviceOutputState(ptrContext, &os);
 
 		// Close handle
@@ -315,7 +325,8 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 	// Build output buffer
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
 		// Call bluetooth evaluator if connection is qual to BT
-		return DS5W_E_CURRENTLY_NOT_SUPPORTED;
+		// return DS5W_E_CURRENTLY_NOT_SUPPORTED;
+		__DS5W::USB::createHidOutputBuffer(ptrContext->_internal.hidBuffer, ptrOutputState);
 	}
 	else {
 		// Else it is USB so call its evaluator
@@ -326,7 +337,7 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 	unsigned short outputReportLength = 0;
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
 		// The bluetooth input report is ?? Bytes long
-		outputReportLength = 0;
+		outputReportLength = 547;
 	}
 	else {
 		// The usb input report is 48 Bytes long

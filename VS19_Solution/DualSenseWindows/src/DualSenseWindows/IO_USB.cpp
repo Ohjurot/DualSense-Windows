@@ -70,6 +70,10 @@ void __DS5W::USB::evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5In
 
 	// Evaluate headphone input
 	ptrInputState->headPhoneConnected = hidInBuffer[0x36] & 0x01;
+
+	// Trigger force feedback
+	ptrInputState->leftTriggerFeedback = hidInBuffer[0x2B];
+	ptrInputState->rightTriggerFeedback = hidInBuffer[0x2A];
 }
 
 void __DS5W::USB::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState) {
@@ -98,5 +102,13 @@ void __DS5W::USB::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5Ou
 	hidOutBuffer[0x2E] = ptrOutputState->lightbar.g;
 	hidOutBuffer[0x2F] = ptrOutputState->lightbar.b;
 
-	// TODO: Triggers and Haptic
+	// Adaptive Triggers
+	if (ptrOutputState->ptrLeftTriggerEffect) {
+		__DS5W::setTriggerEffect(&hidOutBuffer[0x16], ptrOutputState->ptrLeftTriggerEffect);
+	}
+	if (ptrOutputState->ptrRightTriggerEffect) {
+		__DS5W::setTriggerEffect(&hidOutBuffer[0x0B], ptrOutputState->ptrRightTriggerEffect);
+	}
+
+	// TODO: Haptic (maybe in diffrent "audio" function)
 }

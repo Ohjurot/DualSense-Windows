@@ -118,6 +118,8 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				// TODO: Add a "user mode" connection query
 				if (con._internal.connection == DS5W::DeviceConnection::USB) {
 					builder << std::endl << L" === USB Exclusive (for now) ===" << std::endl;
+					builder << L"Trigger Feedback:\tLeft: " << (int)inState.leftTriggerFeedback << L"\tRight: " << (int)inState.rightTriggerFeedback << std::endl << std::endl;
+
 					builder << L"Tochpad" << (inState.buttonsB & DS5W_ISTATE_BTN_B_PAD_BUTTON ? L" (pushed):" : L":") << std::endl;
 
 					builder << L"Finger 1\tX: " << inState.touchPoint1.x << L"\t Y: " << inState.touchPoint1.y << std::endl;
@@ -143,6 +145,13 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					outState.leftRumble = 0xFF;
 					outState.rightRumble = 0xFF;
 				}
+
+				DS5W::TriggerFX_Pos efm;
+				efm.type = DS5W_TRIGGER_FXTYPE_POS;
+				efm.position = 0xFF;
+
+				outState.ptrLeftTriggerEffect = &efm;
+				outState.ptrRightTriggerEffect = &efm;
 
 				DS5W::setDeviceOutputState(&con, &outState);
 			}

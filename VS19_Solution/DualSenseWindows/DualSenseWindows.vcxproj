@@ -314,14 +314,17 @@
     <ClInclude Include="include\DualSenseWindows\DSW_Api.h" />
     <ClInclude Include="include\DualSenseWindows\Helpers.h" />
     <ClInclude Include="include\DualSenseWindows\IO.h" />
+    <ClInclude Include="include\DualSenseWindows\TriggerFX.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\DualSenseWindows\IO_BT.h" />
+    <ClInclude Include="src\DualSenseWindows\IO_TriggerFx.h" />
     <ClInclude Include="src\DualSenseWindows\IO_USB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DualSenseWindows\Helpers.cpp" />
     <ClCompile Include="src\DualSenseWindows\IO.cpp" />
     <ClCompile Include="src\DualSenseWindows\IO_BT.cpp" />
+    <ClCompile Include="src\DualSenseWindows\IO_TriggerFx.cpp" />
     <ClCompile Include="src\DualSenseWindows\IO_USB.cpp" />
   </ItemGroup>
   <ItemGroup>

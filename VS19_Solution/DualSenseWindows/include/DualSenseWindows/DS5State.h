@@ -9,6 +9,8 @@
 */
 #pragma once
 
+#include <DualSenseWindows/TriggerFX.h>
+
 #define DS5W_ISTATE_BTX_SQUARE 0x10
 #define DS5W_ISTATE_BTX_CROSS 0x20
 #define DS5W_ISTATE_BTX_CIRCLE 0x40
@@ -170,6 +172,16 @@ namespace DS5W {
 		/// Indicates the connection of headphone
 		/// </summary>
 		bool headPhoneConnected;
+
+		/// <summary>
+		/// EXPERIMAENTAL: Feedback of the left adaptive trigger (only when trigger effect is active)
+		/// </summary>
+		unsigned char leftTriggerFeedback;
+
+		/// <summary>
+		/// EXPERIMAENTAL: Feedback of the right adaptive trigger (only when trigger effect is active)
+		/// </summary>
+		unsigned char rightTriggerFeedback;
 	} DS5InputState;
 
 	typedef struct _DS5OutputState {
@@ -197,6 +209,16 @@ namespace DS5W {
 		/// Color of the lightbar
 		/// </summary>
 		Color lightbar;
+
+		/// <summary>
+		/// Effect of left trigger
+		/// </summary>
+		TriggerFX* ptrLeftTriggerEffect;
+
+		/// <summary>
+		/// Effect of right trigger
+		/// </summary>
+		TriggerFX* ptrRightTriggerEffect;
 
 	} DS5OutputState;
 }

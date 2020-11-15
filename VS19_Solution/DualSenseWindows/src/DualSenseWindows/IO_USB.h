@@ -10,9 +10,12 @@
 #pragma once
 
 #include <Windows.h>
+
 #include <DualSenseWindows/DSW_Api.h>
 #include <DualSenseWindows/Device.h>
 #include <DualSenseWindows/DS5State.h>
+
+#include <DualSenseWindows/IO_TriggerFx.h>
 
 namespace __DS5W {
 	namespace USB {
@@ -24,7 +27,7 @@ namespace __DS5W {
 		void evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5InputState* ptrInputState);
 
 		/// <summary>
-		/// Creates the hid output buffer
+		/// Creates the hid output buffer for USB
 		/// </summary>
 		/// <param name="hidOutBuffer">HID Output buffer</param>
 		/// <param name="ptrOutputState">Pointer to state to read from</param>

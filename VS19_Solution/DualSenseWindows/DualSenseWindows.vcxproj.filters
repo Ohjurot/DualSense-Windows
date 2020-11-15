@@ -39,6 +39,12 @@
     <ClInclude Include="include\DualSenseWindows\Helpers.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\DualSenseWindows\TriggerFX.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DualSenseWindows\IO_TriggerFx.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DualSenseWindows\IO.cpp">
@@ -51,6 +57,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\DualSenseWindows\Helpers.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DualSenseWindows\IO_TriggerFx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
