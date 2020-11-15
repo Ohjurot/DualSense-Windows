@@ -109,7 +109,8 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 						if (HidP_GetCaps(ppd, &deviceCaps) == HIDP_STATUS_SUCCESS) {
 							// Check for device connection type
 							if (ptrInfo) {
-								if (deviceCaps.InputReportByteLength == 64) {
+								ptrInfo->_internal.inputReportByteLength = deviceCaps.InputReportByteLength;
+								if (ptrInfo->_internal.inputReportByteLength == 64) {
 									ptrInfo->_internal.connection = DS5W::DeviceConnection::USB;
 								}
 								else {
@@ -171,9 +172,9 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 	}
 
 	// TEMP: Faile if connecte via BT
-	if (ptrEnumInfo->_internal.connection == DS5W::DeviceConnection::BT) {
+	/*if (ptrEnumInfo->_internal.connection == DS5W::DeviceConnection::BT) {
 		return DS5W_E_CURRENTLY_NOT_SUPPORTED;
-	}
+	}*/
 
 	// Connect to device
 	HANDLE deviceHandle = CreateFileW(ptrEnumInfo->_internal.path, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, NULL, NULL);
@@ -184,10 +185,11 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 	// Write to conext
 	ptrContext->_internal.connected = true;
 	ptrContext->_internal.connection = ptrEnumInfo->_internal.connection;
+	ptrContext->_internal.inputReportByteLength = ptrEnumInfo->_internal.inputReportByteLength;
 	ptrContext->_internal.deviceHandle = deviceHandle;
 	wcscpy_s(ptrContext->_internal.devicePath, 260, ptrEnumInfo->_internal.path);
-	ZeroMemory(ptrContext->_internal.hidBuffer, 64);
-
+	//ZeroMemory(ptrContext->_internal.hidBuffer, ptrContext->_internal.inputReportByteLength);	//To replace with input report byte length
+	ptrContext->_internal.hidBuffer = (unsigned char*)calloc(ptrContext->_internal.inputReportByteLength,sizeof(unsigned char));	//This is gonna leak like piss
 	// Return OK
 	return DS5W_OK;
 }
@@ -198,12 +200,15 @@ DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
 		CloseHandle(ptrContext->_internal.deviceHandle);
 		ptrContext->_internal.deviceHandle = NULL;
 	}
-
+	
 	// Unset bool
 	ptrContext->_internal.connected = false;
 
 	// Unset string
 	ptrContext->_internal.devicePath[0] = 0x0;
+
+	//Plug that leak
+	free(ptrContext->_internal.hidBuffer);
 }
 
 DS5W_API DS5W_ReturnValue DS5W::reconnectDevice(DS5W::DeviceContext* ptrContext) {	
@@ -242,7 +247,7 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 
 	// Get device input
 	ptrContext->_internal.hidBuffer[0] = 0x01;
-	if (!ReadFile(ptrContext->_internal.deviceHandle, ptrContext->_internal.hidBuffer, 64, NULL, NULL)) {
+	if (!HidD_GetInputReport(ptrContext->_internal.deviceHandle, ptrContext->_internal.hidBuffer, ptrContext->_internal.inputReportByteLength)) {	//To replace with input report byte length
 		// Close handle and set error state
 		CloseHandle(ptrContext->_internal.deviceHandle);
 		ptrContext->_internal.deviceHandle = NULL;

@@ -86,7 +86,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		DS5W::DS5InputState inState;
 
 		// Application infinity loop
-		bool keepRunning = true;
+		bool keepRunning = false;
 		while (keepRunning) {
 			// Get input state
 			if (DS5W_SUCCESS(DS5W::getDeviceInputState(&con, &inState))) {
@@ -112,6 +112,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		system("pause");
 		return -1;
 	}
+	system("pause");
 
 	return 0;
 }
