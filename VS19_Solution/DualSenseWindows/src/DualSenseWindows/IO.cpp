@@ -8,6 +8,8 @@
 	Licensed under the MIT License (To be found in repository root directory)
 */
 #include <DualSenseWindows/IO.h>
+#include <DualSenseWindows/IO_BT.h>
+#include <DualSenseWindows/IO_USB.h>
 
 #define NOMINMAX
 
@@ -109,17 +111,21 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 						if (HidP_GetCaps(ppd, &deviceCaps) == HIDP_STATUS_SUCCESS) {
 							// Check for device connection type
 							if (ptrInfo) {
-								ptrInfo->_internal.inputReportByteLength = deviceCaps.InputReportByteLength;
-								if (ptrInfo->_internal.inputReportByteLength == 64) {
+								// Check if controller matches USB specifications
+								if (deviceCaps.InputReportByteLength == 64) {
 									ptrInfo->_internal.connection = DS5W::DeviceConnection::USB;
+
+									// Device found and valid -> Inrement index
+									inputArrIndex++;
 								}
-								else {
+								// Check if controler matches BT specifications
+								else if(deviceCaps.InputReportByteLength == 78) {
 									ptrInfo->_internal.connection = DS5W::DeviceConnection::BT;
+
+									// Device found and valid -> Inrement index
+									inputArrIndex++;
 								}
 							}
-
-							// Inrement index
-							inputArrIndex++;
 						}
 
 						// Free preparsed data
@@ -171,11 +177,6 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 		return DS5W_E_INVALID_ARGS;
 	}
 
-	// TEMP: Faile if connecte via BT
-	/*if (ptrEnumInfo->_internal.connection == DS5W::DeviceConnection::BT) {
-		return DS5W_E_CURRENTLY_NOT_SUPPORTED;
-	}*/
-
 	// Connect to device
 	HANDLE deviceHandle = CreateFileW(ptrEnumInfo->_internal.path, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, NULL, NULL);
 	if (!deviceHandle || (deviceHandle == INVALID_HANDLE_VALUE)) {
@@ -185,11 +186,23 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 	// Write to conext
 	ptrContext->_internal.connected = true;
 	ptrContext->_internal.connection = ptrEnumInfo->_internal.connection;
-	ptrContext->_internal.inputReportByteLength = ptrEnumInfo->_internal.inputReportByteLength;
 	ptrContext->_internal.deviceHandle = deviceHandle;
 	wcscpy_s(ptrContext->_internal.devicePath, 260, ptrEnumInfo->_internal.path);
-	//ZeroMemory(ptrContext->_internal.hidBuffer, ptrContext->_internal.inputReportByteLength);	//To replace with input report byte length
-	ptrContext->_internal.hidBuffer = (unsigned char*)calloc(ptrContext->_internal.inputReportByteLength,sizeof(unsigned char));	//This is gonna leak like piss
+
+	// Get input report length
+	unsigned short inputReportLength = 0;
+	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		// The bluetooth input report is 78 Bytes long
+		inputReportLength = 78;
+	}
+	else {
+		// The usb input report is 64 Bytes long
+		inputReportLength = 64;
+	}
+
+	// TODO: Replace with proper memory allocation routine
+	ptrContext->_internal.hidBuffer = (unsigned char*)calloc(inputReportLength, sizeof(unsigned char));
+	
 	// Return OK
 	return DS5W_OK;
 }
@@ -245,9 +258,20 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 	// Get the most recent package
 	HidD_FlushQueue(ptrContext->_internal.deviceHandle);
 
+	// Get input report length
+	unsigned short inputReportLength = 0;
+	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		// The bluetooth input report is 78 Bytes long
+		inputReportLength = 78;
+	}
+	else {
+		// The usb input report is 64 Bytes long
+		inputReportLength = 64;
+	}
+
 	// Get device input
 	ptrContext->_internal.hidBuffer[0] = 0x01;
-	if (!HidD_GetInputReport(ptrContext->_internal.deviceHandle, ptrContext->_internal.hidBuffer, ptrContext->_internal.inputReportByteLength)) {	//To replace with input report byte length
+	if (!ReadFile(ptrContext->_internal.deviceHandle, ptrContext->_internal.hidBuffer, inputReportLength, NULL, NULL)) {
 		// Close handle and set error state
 		CloseHandle(ptrContext->_internal.deviceHandle);
 		ptrContext->_internal.deviceHandle = NULL;
@@ -260,77 +284,15 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 	// Get pointer for easy access
 	unsigned char* buffer = ptrContext->_internal.hidBuffer;
 
-	// == Parse input ==
-
-	// Convert sticks to signed range
-	ptrInputState->leftStick.x  = (char)(((short)(buffer[0x01] - 128)));
-	ptrInputState->leftStick.y  = (char)(((short)(buffer[0x02] - 127)) * -1);
-	ptrInputState->rightStick.x = (char)(((short)(buffer[0x03] - 128)));
-	ptrInputState->rightStick.y = (char)(((short)(buffer[0x04] - 127)) * -1);
-
-	// Convert trigger to unsigned range
-	ptrInputState->leftTrigger = buffer[0x05];
-	ptrInputState->rightTrigger = buffer[0x06];
-
-	// Buttons
-	ptrInputState->buttonsAndDpad = buffer[0x08] & 0xF0;
-	ptrInputState->buttonsA = buffer[0x09];
-	ptrInputState->buttonsB = buffer[0x0A];
-
-	// Dpad
-	switch (buffer[0x08] & 0x0F) {
-		// Up
-		case 0x0:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_UP;
-			break;
-		// Down
-		case 0x4:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_DOWN;
-			break;
-		// Left
-		case 0x6:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_LEFT;
-			break;
-		// Right
-		case 0x2:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_RIGHT;
-			break;
-		// Left Down
-		case 0x5:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_LEFT | DS5W_ISTATE_DPAD_DOWN;
-			break;
-		// Left Up
-		case 0x7:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_LEFT | DS5W_ISTATE_DPAD_UP;
-			break;
-		// Right Up
-		case 0x1:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_RIGHT | DS5W_ISTATE_DPAD_UP;
-			break;
-		// Right Down
-		case 0x3:
-			ptrInputState->buttonsAndDpad |= DS5W_ISTATE_DPAD_RIGHT | DS5W_ISTATE_DPAD_DOWN;
-			break;
+	// Evaluete input buffer
+	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		// Call bluetooth evaluator if connection is qual to BT
+		__DS5W::BT::evaluateHidInputBuffer(buffer, ptrInputState);
+	} else {
+		// Else it is USB so call its evaluator
+		__DS5W::USB::evaluateHidInputBuffer(buffer, ptrInputState);
 	}
-
-	// Copy accelerometer readings
-	memcpy(&ptrInputState->accelerometer, &buffer[0x10], 2 * 3);
-
-	//TEMP: Copy gyro data (no processing currently done!)
-	memcpy(&ptrInputState->gyroscope, &buffer[0x16], 2 * 3);
-
-	// Evaluate touch state 1
-	UINT32 touchpad1Raw = *(UINT32*)(&buffer[0x21]);
-	ptrInputState->touchPoint1.x = (touchpad1Raw & 0xFFF00000) >> 20;
-	ptrInputState->touchPoint1.y = (touchpad1Raw & 0x000FFF00) >> 8;
-
-	// Evaluate touch state 2
-	UINT32 touchpad2Raw = *(UINT32*)(&buffer[0x25]);
-	ptrInputState->touchPoint2.x = (touchpad2Raw & 0xFFF00000) >> 20;
-	ptrInputState->touchPoint2.y = (touchpad2Raw & 0x000FFF00) >> 8;
-
-	// Evaluate headphone input
-	ptrInputState->headPhoneConnected = buffer[0x36] & 0x01;
+	
 
 	// Return ok
 	return DS5W_OK;

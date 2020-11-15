@@ -23,7 +23,7 @@ namespace DS5W {
 		/// Controler is connected via bluetooth
 		/// </summary>
 		BT = 1,
-	} DeviceConnection, DevCnt;
+	} DeviceConnection;
 
 	/// <summary>
 	/// Struckt for storing device enum info while device discovery
@@ -41,10 +41,9 @@ namespace DS5W {
 			/// <summary>
 			/// Connection type of the discoverd device
 			/// </summary>
-			DevCnt connection;
-			unsigned short inputReportByteLength;
+			DeviceConnection connection;
 		} _internal;
-	} DeviceEnumInfo, DevEInf;
+	} DeviceEnumInfo;
 
 	/// <summary>
 	/// Device context
@@ -67,7 +66,7 @@ namespace DS5W {
 			/// <summary>
 			/// Connection of the device
 			/// </summary>
-			DevCnt connection;
+			DeviceConnection connection;
 
 			/// <summary>
 			/// Current state of connection
@@ -75,10 +74,9 @@ namespace DS5W {
 			bool connected;
 
 			/// <summary>
-			/// HID Input buffer
+			/// HID Input buffer (will be allocated by the context init function)
 			/// </summary>
-			unsigned char* hidBuffer;	//To replace with input report byte length
-			unsigned short inputReportByteLength;
+			unsigned char* hidBuffer;
 		}_internal;
-	} DeviceContext, DevCtx;
+	} DeviceContext;
 }

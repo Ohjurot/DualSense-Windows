@@ -6,6 +6,7 @@ First Release coming soon!
 #### Road map to first preview release:
 
 - ~~Reading the input state from the controller using USB~~. DONE!
+- ~~Reading basic input via bluetooth~~. DONE!
 - Writing Output state to the controller using USB. *Work In Progress*
 - Documenting the API
 - Documenting the raw protocol 
@@ -26,4 +27,4 @@ First preview should be released before 28.11.2020 (The hard work is done - The 
 #### Feature planed for the future
 
 - Calibrating the gyroscope 
-- Writing / Reading over bluetooth (If you know something about the wireless protocol - especial writing data to the controller - please let me know by creating an issue!) 
+- Fully write and read over bluetooth (If you know something about the wireless protocol - especial writing data to the controller - please let me know by creating an issue!) 

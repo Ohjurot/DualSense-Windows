@@ -129,56 +129,56 @@
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -314,9 +314,13 @@
     <ClInclude Include="include\DualSenseWindows\DSW_Api.h" />
     <ClInclude Include="include\DualSenseWindows\IO.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\DualSenseWindows\IO_BT.h" />
+    <ClInclude Include="src\DualSenseWindows\IO_USB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DualSenseWindows\IO.cpp" />
+    <ClCompile Include="src\DualSenseWindows\IO_BT.cpp" />
+    <ClCompile Include="src\DualSenseWindows\IO_USB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DualSenseWindows.rc" />

@@ -31,6 +31,12 @@
 #define DS5W_ISTATE_BTN_B_PAD_BUTTON 0x02
 #define DS5W_ISTATE_BTN_B_MIC_BUTTON 0x04
 
+#define DS5W_OSTATE_PLAYER_LED_LEFT 0x01
+#define DS5W_OSTATE_PLAYER_LED_MIDDLE_LEFT 0x02
+#define DS5W_OSTATE_PLAYER_LED_MIDDLE 0x04
+#define DS5W_OSTATE_PLAYER_LED_MIDDLE_RIGHT 0x08
+#define DS5W_OSTATE_PLAYER_LED_RIGHT 0x10
+
 namespace DS5W {
 
 	/// <summary>
@@ -58,6 +64,15 @@ namespace DS5W {
 	} Vector3, Vec3;
 
 	/// <summary>
+	/// RGB Color
+	/// </summary>
+	typedef struct _Color {
+		unsigned char r;
+		unsigned char g;
+		unsigned char b;
+	} Color;
+
+	/// <summary>
 	/// Touchpad state
 	/// </summary>
 	typedef struct _Touch {
@@ -71,6 +86,26 @@ namespace DS5W {
 		/// </summary>
 		unsigned int y;
 	} Touch;
+
+	/// <summary>
+	/// State of the mic led
+	/// </summary>
+	typedef enum class _MicLed {
+		/// <summary>
+		/// Lef is off
+		/// </summary>
+		OFF,
+
+		/// <summary>
+		/// Led is on
+		/// </summary>
+		ON,
+
+		/// <summary>
+		/// Led is pulsing
+		/// </summary>
+		PULSE,
+	} MicLed;
 
 	/// <summary>
 	/// Input state of the controler
@@ -136,4 +171,32 @@ namespace DS5W {
 		/// </summary>
 		bool headPhoneConnected;
 	} DS5InputState;
+
+	typedef struct _DS5OutputState {
+		/// <summary>
+		/// Left / Hard rumbel motor
+		/// </summary>
+		unsigned char leftRumble;
+
+		/// <summary>
+		/// Right / Soft rumbel motor
+		/// </summary>
+		unsigned char rightRumble;
+
+		/// <summary>
+		/// State of the microphone led
+		/// </summary>
+		MicLed microphoneLed;
+
+		/// <summary>
+		/// Player indication leds bitflag (You may used them for other features) DS5W_OSTATE_PLAYER_LED_???
+		/// </summary>
+		unsigned char playerLeds;
+
+		/// <summary>
+		/// Color of the lightbar
+		/// </summary>
+		Color lightbar;
+
+	} DS5OutputState;
 }
