@@ -21,7 +21,13 @@ namespace __DS5W {
 		/// </summary>
 		/// <param name="hidInBuffer">Input buffer</param>
 		/// <param name="ptrInputState">Input state to be set</param>
-		/// <returns></returns>
 		void evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5InputState* ptrInputState);
+
+		/// <summary>
+		/// Creates the hid output buffer
+		/// </summary>
+		/// <param name="hidOutBuffer">HID Output buffer</param>
+		/// <param name="ptrOutputState">Pointer to state to read from</param>
+		void createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState);
 	}
 }

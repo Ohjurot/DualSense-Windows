@@ -5,6 +5,7 @@
 
 #include <DualSenseWindows/IO.h>
 #include <DualSenseWindows/Device.h>
+#include <DualSenseWindows/Helpers.h>
 
 typedef std::wstringstream wstrBuilder;
 
@@ -13,6 +14,8 @@ class Console {
 		Console() {
 			AllocConsole();
 			consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			SetConsoleTitle(L"Press L1 and R1 to exit");
 		}
 
 		~Console() {
@@ -84,12 +87,18 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 		// State object
 		DS5W::DS5InputState inState;
+		DS5W::DS5OutputState outState;
+		ZeroMemory(&inState, sizeof(DS5W::DS5InputState));
+		ZeroMemory(&outState, sizeof(DS5W::DS5OutputState));
+
+		// Color intentsity
+		float intencity = 1.0f;
 
 		// Application infinity loop
-		bool keepRunning = true;
-		while (keepRunning) {
+		while (!(inState.buttonsA & DS5W_ISTATE_BTN_A_LEFT_BUMPER && inState.buttonsA & DS5W_ISTATE_BTN_A_RIGHT_BUMPER)) {
 			// Get input state
 			if (DS5W_SUCCESS(DS5W::getDeviceInputState(&con, &inState))) {
+				// === Read Input ===
 				// Build all universal buttons (USB and BT) as text
 				builder << std::endl << L" === Universal input ===" << std::endl;
 
@@ -121,6 +130,21 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 				// Print to console
 				console.writeLine(builder);
+
+				// === Write Output ===
+				outState.leftRumble = max(outState.leftRumble - 2L, 0);
+				outState.rightRumble = max(outState.rightRumble - 1L, 0);
+
+				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(25, 45, 161, intencity);
+				intencity -= 0.0025f;
+				if (intencity <= 0.0f) {
+					intencity = 1.0f;
+
+					outState.leftRumble = 0xFF;
+					outState.rightRumble = 0xFF;
+				}
+
+				DS5W::setDeviceOutputState(&con, &outState);
 			}
 			else {
 				// Device disconnected show error and try to reconnect
@@ -137,7 +161,6 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		system("pause");
 		return -1;
 	}
-	system("pause");
 
 	return 0;
 }

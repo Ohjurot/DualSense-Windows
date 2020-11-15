@@ -70,4 +70,12 @@ namespace DS5W {
 	/// <param name="ptrInputState">Pointer to input state</param>
 	/// <returns>Result of call</returns>
 	DS5W_API DS5W_ReturnValue getDeviceInputState(DS5W::DeviceContext* ptrContext, DS5W::DS5InputState* ptrInputState);
+
+	/// <summary>
+	/// Set the device output state
+	/// </summary>
+	/// <param name="ptrContext">Pointer to context</param>
+	/// <param name="ptrOutputState">Pointer to output state to be set</param>
+	/// <returns>Result of call</returns>
+	DS5W_API DS5W_ReturnValue setDeviceOutputState(DS5W::DeviceContext* ptrContext, DS5W::DS5OutputState* ptrOutputState);
 }

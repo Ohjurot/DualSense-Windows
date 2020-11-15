@@ -90,21 +90,21 @@ namespace DS5W {
 	/// <summary>
 	/// State of the mic led
 	/// </summary>
-	typedef enum class _MicLed {
+	typedef enum class _MicLed : unsigned char{
 		/// <summary>
 		/// Lef is off
 		/// </summary>
-		OFF,
+		OFF = 0x00,
 
 		/// <summary>
 		/// Led is on
 		/// </summary>
-		ON,
+		ON = 0x01,
 
 		/// <summary>
 		/// Led is pulsing
 		/// </summary>
-		PULSE,
+		PULSE = 0x02,
 	} MicLed;
 
 	/// <summary>

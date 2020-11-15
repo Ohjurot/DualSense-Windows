@@ -71,3 +71,32 @@ void __DS5W::USB::evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5In
 	// Evaluate headphone input
 	ptrInputState->headPhoneConnected = hidInBuffer[0x36] & 0x01;
 }
+
+void __DS5W::USB::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState) {
+	// Cleat all input data
+	ZeroMemory(hidOutBuffer, 48);
+	
+	// Report type output
+	hidOutBuffer[0x00] = 0x02;
+
+	// Feature mask
+	hidOutBuffer[0x01] = 0xFF;
+	hidOutBuffer[0x02] = 0xF7;
+
+	// Rumbel motors
+	hidOutBuffer[0x03] = ptrOutputState->rightRumble;
+	hidOutBuffer[0x04] = ptrOutputState->leftRumble;
+
+	// Mic led
+	hidOutBuffer[0x09] = (unsigned char)ptrOutputState->microphoneLed;
+
+	// Player led
+	hidOutBuffer[0x2C] = ptrOutputState->playerLeds;
+
+	// Lightbar
+	hidOutBuffer[0x2D] = ptrOutputState->lightbar.r;
+	hidOutBuffer[0x2E] = ptrOutputState->lightbar.g;
+	hidOutBuffer[0x2F] = ptrOutputState->lightbar.b;
+
+	// TODO: Triggers and Haptic
+}

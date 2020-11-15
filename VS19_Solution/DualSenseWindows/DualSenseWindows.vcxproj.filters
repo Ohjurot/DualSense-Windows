@@ -36,6 +36,9 @@
     <ClInclude Include="src\DualSenseWindows\IO_USB.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\DualSenseWindows\Helpers.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DualSenseWindows\IO.cpp">
@@ -45,6 +48,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\DualSenseWindows\IO_USB.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DualSenseWindows\Helpers.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

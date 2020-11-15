@@ -208,8 +208,14 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 }
 
 DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
-	// Unset handle
+	// Check if handle is existing
 	if (ptrContext->_internal.deviceHandle) {
+		// Send zero output report to disable all onging outputs
+		DS5W::DS5OutputState os;
+		ZeroMemory(&os, sizeof(DS5W::DS5OutputState));
+		DS5W::setDeviceOutputState(ptrContext, &os);
+
+		// Close handle
 		CloseHandle(ptrContext->_internal.deviceHandle);
 		ptrContext->_internal.deviceHandle = NULL;
 	}
@@ -281,19 +287,60 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 		return DS5W_E_DEVICE_REMOVED;
 	}
 
-	// Get pointer for easy access
-	unsigned char* buffer = ptrContext->_internal.hidBuffer;
-
 	// Evaluete input buffer
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
 		// Call bluetooth evaluator if connection is qual to BT
-		__DS5W::BT::evaluateHidInputBuffer(buffer, ptrInputState);
+		__DS5W::BT::evaluateHidInputBuffer(ptrContext->_internal.hidBuffer, ptrInputState);
 	} else {
 		// Else it is USB so call its evaluator
-		__DS5W::USB::evaluateHidInputBuffer(buffer, ptrInputState);
+		__DS5W::USB::evaluateHidInputBuffer(ptrContext->_internal.hidBuffer, ptrInputState);
 	}
 	
 
 	// Return ok
 	return DS5W_OK;
+}
+
+DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrContext, DS5W::DS5OutputState* ptrOutputState) {
+	// Check pointer
+	if (!ptrContext || !ptrOutputState) {
+		return DS5W_E_INVALID_ARGS;
+	}
+
+	// Check for connection
+	if (!ptrContext->_internal.connected) {
+		return DS5W_E_DEVICE_REMOVED;
+	}
+
+	// Build output buffer
+	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		// Call bluetooth evaluator if connection is qual to BT
+		return DS5W_E_CURRENTLY_NOT_SUPPORTED;
+	}
+	else {
+		// Else it is USB so call its evaluator
+		__DS5W::USB::createHidOutputBuffer(ptrContext->_internal.hidBuffer, ptrOutputState);
+	}
+
+	// Get otuput report length
+	unsigned short outputReportLength = 0;
+	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		// The bluetooth input report is ?? Bytes long
+		outputReportLength = 0;
+	}
+	else {
+		// The usb input report is 48 Bytes long
+		outputReportLength = 48;
+	}
+
+	// Write to controller
+	if (!WriteFile(ptrContext->_internal.deviceHandle, ptrContext->_internal.hidBuffer, outputReportLength, NULL, NULL)) {
+		// Close handle and set error state
+		CloseHandle(ptrContext->_internal.deviceHandle);
+		ptrContext->_internal.deviceHandle = NULL;
+		ptrContext->_internal.connected = false;
+
+		// Return error
+		return DS5W_E_DEVICE_REMOVED;
+	}
 }
