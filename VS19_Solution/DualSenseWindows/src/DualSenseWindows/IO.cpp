@@ -215,7 +215,8 @@ DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
 		// Create trigger move back report
 		DS5W::TriggerFX_Pos pos;
 		pos.type = DS5W_TRIGGER_FXTYPE_POS;
-		pos.position = 0x00;
+		pos.startPosition = 0x00;
+		pos.force = 0x00;
 
 		// Send zero output report to disable all onging outputs
 		DS5W::DS5OutputState os;

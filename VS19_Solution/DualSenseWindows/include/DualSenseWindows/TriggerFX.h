@@ -30,7 +30,12 @@ namespace DS5W {
 		/// <summary>
 		/// Start position of force
 		/// </summary>
-		unsigned char position;
+		unsigned char startPosition;
+
+		/// <summary>
+		/// Start force
+		/// </summary>
+		unsigned char force;
 	} TriggerFX_Pos;
 
 	/// <summary>

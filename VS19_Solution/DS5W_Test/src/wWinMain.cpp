@@ -58,13 +58,13 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 	// check size
 	if (controllersCount == 0) {
-		console.writeLine(L"No PS5 controller found!");
+		console.writeLine(L"No DualSense controller found!");
 		system("pause");
 		return -1;
 	}
 
 	// Print all controller
-	builder << L"Found " << controllersCount << L" PS5 Controller(s):";
+	builder << L"Found " << controllersCount << L" DualSense Controller(s):";
 	console.writeLine(builder);
 
 	// Iterate controllers
@@ -146,9 +146,10 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					outState.rightRumble = 0xFF;
 				}
 
-				DS5W::TriggerFX_Clicky efm;
-				efm.type = DS5W_TRIGGER_FXTYPE_CLICKY;
-				efm.clickyness = inState.leftStick.y;
+				DS5W::TriggerFX_Pos efm;
+				efm.type = DS5W_TRIGGER_FXTYPE_POS;
+				efm.startPosition = inState.rightStick.y + 128;
+				efm.force = inState.leftStick.y + 128;
 
 				outState.ptrLeftTriggerEffect = &efm;
 				outState.ptrRightTriggerEffect = &efm;
