@@ -49,41 +49,41 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 	// Console
 	Console console;
 	wstrBuilder builder;
-	console.writeLine(L"DualShock 5 Windows Test\n========================\n");
+	console.writeLine(L"DualSense Controller Windows Test\n========================\n");
 	
-	// Enum all controlers presentf
+	// Enum all controllers presentf
 	DS5W::DeviceEnumInfo infos[16];
-	unsigned int controlersCount = 0;
-	DS5W_ReturnValue rv = DS5W::enumDevices(infos, 16, true, &controlersCount);
+	unsigned int controllersCount = 0;
+	DS5W_ReturnValue rv = DS5W::enumDevices(infos, 16, true, &controllersCount);
 
 	// check size
-	if (controlersCount == 0) {
-		console.writeLine(L"No PS5 controler found!");
+	if (controllersCount == 0) {
+		console.writeLine(L"No PS5 controller found!");
 		system("pause");
 		return -1;
 	}
 
-	// Print all controler
-	builder << L"Found " << controlersCount << L" PS5 Controler(s):";
+	// Print all controller
+	builder << L"Found " << controllersCount << L" PS5 Controller(s):";
 	console.writeLine(builder);
 
-	// Iterate controlers
-	for (unsigned int i = 0; i < controlersCount; i++) {
+	// Iterate controllers
+	for (unsigned int i = 0; i < controllersCount; i++) {
 		if (infos[i]._internal.connection == DS5W::DeviceConnection::BT) {
-			builder << L"Wireless (Blotooth) controler (";
+			builder << L"Wireless (Bluetooth) controller (";
 		}
 		else {
-			builder << L"Wired (USB) controler (";
+			builder << L"Wired (USB) controller (";
 		}
 
 		builder << infos[i]._internal.path << L")";
 		console.writeLine(builder);
 	}
 
-	// Create first controler
+	// Create first controller
 	DS5W::DeviceContext con;
 	if (DS5W_SUCCESS(DS5W::initDeviceContext(&infos[0], &con))) {
-		console.writeLine(L"DualSense 5 controller connected");
+		console.writeLine(L"DualSense controller connected");
 
 		// State object
 		DS5W::DS5InputState inState;
@@ -92,7 +92,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		ZeroMemory(&outState, sizeof(DS5W::DS5OutputState));
 
 		// Color intentsity
-		float intencity = 1.0f;
+		float intensity = 1.0f;
 
 		// Application infinity loop
 		while (!(inState.buttonsA & DS5W_ISTATE_BTN_A_LEFT_BUMPER && inState.buttonsA & DS5W_ISTATE_BTN_A_RIGHT_BUMPER)) {
@@ -112,15 +112,15 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					(inState.buttonsAndDpad & DS5W_ISTATE_DPAD_DOWN ? L"D " : L"  ") << (inState.buttonsAndDpad & DS5W_ISTATE_DPAD_RIGHT ? L"R " : L"  ");
 				builder << L"\tButtons: " << (inState.buttonsAndDpad & DS5W_ISTATE_BTX_SQUARE ? L"S " : L"  ") << (inState.buttonsAndDpad & DS5W_ISTATE_BTX_CROSS ? L"X " : L"  ") <<
 					(inState.buttonsAndDpad & DS5W_ISTATE_BTX_CIRCLE ? L"O " : L"  ") << (inState.buttonsAndDpad & DS5W_ISTATE_BTX_TRIANGLE ? L"T " : L"  ") << std::endl;
-				builder << (inState.buttonsA & DS5W_ISTATE_BTN_A_MENUE ? L"MENUE" : L"") << (inState.buttonsA & DS5W_ISTATE_BTN_A_SELECT ? L"\tSELECT" : L"") << std::endl;;
+				builder << (inState.buttonsA & DS5W_ISTATE_BTN_A_MENUE ? L"MENU" : L"") << (inState.buttonsA & DS5W_ISTATE_BTN_A_SELECT ? L"\tSELECT" : L"") << std::endl;;
 
-				// Check if controler support USB
+				// Check if controller supports USB
 				// TODO: Add a "user mode" connection query
 				if (con._internal.connection == DS5W::DeviceConnection::USB) {
 					builder << std::endl << L" === USB Exclusive (for now) ===" << std::endl;
 					builder << L"Trigger Feedback:\tLeft: " << (int)inState.leftTriggerFeedback << L"\tRight: " << (int)inState.rightTriggerFeedback << std::endl << std::endl;
 
-					builder << L"Tochpad" << (inState.buttonsB & DS5W_ISTATE_BTN_B_PAD_BUTTON ? L" (pushed):" : L":") << std::endl;
+					builder << L"Touchpad" << (inState.buttonsB & DS5W_ISTATE_BTN_B_PAD_BUTTON ? L" (pushed):" : L":") << std::endl;
 
 					builder << L"Finger 1\tX: " << inState.touchPoint1.x << L"\t Y: " << inState.touchPoint1.y << std::endl;
 					builder << L"Finger 2\tX: " << inState.touchPoint2.x << L"\t Y: " << inState.touchPoint2.y << std::endl << std::endl;
@@ -137,10 +137,10 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				outState.leftRumble = max(outState.leftRumble - 2L, 0);
 				outState.rightRumble = max(outState.rightRumble - 1L, 0);
 
-				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(25, 45, 161, intencity);
-				intencity -= 0.0025f;
-				if (intencity <= 0.0f) {
-					intencity = 1.0f;
+				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(25, 45, 161, intensity);
+				intensity -= 0.0025f;
+				if (intensity <= 0.0f) {
+					intensity = 1.0f;
 
 					outState.leftRumble = 0xFF;
 					outState.rightRumble = 0xFF;
@@ -166,7 +166,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		DS5W::freeDeviceContext(&con);
 	}
 	else {
-		console.writeLine(L"Failed to connect to controler!");
+		console.writeLine(L"Failed to connect to controller!");
 		system("pause");
 		return -1;
 	}
