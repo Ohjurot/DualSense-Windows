@@ -23,5 +23,5 @@ namespace __DS5W {
 	/// <param name="ptrTriggerFxBuffer">Pointer to begin of left or right trigger effect</param>
 	/// <param name="ptrTriggerFx">Pointer to trigger effect to use</param>
 	/// <returns>If was suuccesfull</returns>
-	bool setTriggerEffect(unsigned char* ptrTriggerFxBuffer, DS5W::TriggerFX* ptrTriggerFx);
+	void setTriggerEffect(unsigned char* ptrTriggerFxBuffer, DS5W::TriggerFX* ptrTriggerFx);
 }

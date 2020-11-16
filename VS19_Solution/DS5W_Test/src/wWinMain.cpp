@@ -146,9 +146,9 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					outState.rightRumble = 0xFF;
 				}
 
-				DS5W::TriggerFX_Pos efm;
-				efm.type = DS5W_TRIGGER_FXTYPE_POS;
-				efm.position = 0xFF;
+				DS5W::TriggerFX_Clicky efm;
+				efm.type = DS5W_TRIGGER_FXTYPE_CLICKY;
+				efm.clickyness = inState.leftStick.y;
 
 				outState.ptrLeftTriggerEffect = &efm;
 				outState.ptrRightTriggerEffect = &efm;

@@ -10,6 +10,7 @@
 #pragma once
 
 #define DS5W_TRIGGER_FXTYPE_POS 1
+#define DS5W_TRIGGER_FXTYPE_CLICKY 2
 
 namespace DS5W {
 	/// <summary>
@@ -29,6 +30,16 @@ namespace DS5W {
 		/// <summary>
 		/// Start position of force
 		/// </summary>
-		unsigned int position;
+		unsigned char position;
 	} TriggerFX_Pos;
+
+	/// <summary>
+	/// Clicky 
+	/// </summary>
+	typedef struct _TriggerFx_Clicky : TriggerFX {
+		/// <summary>
+		/// How click or soft it is
+		/// </summary>
+		unsigned char clickyness;
+	} TriggerFX_Clicky;
 }
