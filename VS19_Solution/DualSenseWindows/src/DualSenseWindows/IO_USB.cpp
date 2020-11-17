@@ -103,12 +103,52 @@ void __DS5W::USB::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5Ou
 	hidOutBuffer[0x2F] = ptrOutputState->lightbar.b;
 
 	// Adaptive Triggers
-	if (ptrOutputState->ptrLeftTriggerEffect) {
-		__DS5W::setTriggerEffect(&hidOutBuffer[0x16], ptrOutputState->ptrLeftTriggerEffect);
-	}
-	if (ptrOutputState->ptrRightTriggerEffect) {
-		__DS5W::setTriggerEffect(&hidOutBuffer[0x0B], ptrOutputState->ptrRightTriggerEffect);
-	}
+	processTrigger(&ptrOutputState->leftTriggerEffect, &hidOutBuffer[0x16]);
+	processTrigger(&ptrOutputState->rightTriggerEffect, &hidOutBuffer[0x0B]);
 
 	// TODO: Haptic (maybe in diffrent "audio" function)
+}
+
+void __DS5W::USB::processTrigger(DS5W::TriggerEffect* ptrEffect, unsigned char* buffer) {
+	// Switch on effect
+	switch (ptrEffect->effectType) {
+		// Continious
+		case DS5W::TriggerEffectType::ContinuousResitance:
+			// Mode
+			buffer[0x00] = 0x01;
+			// Parameters
+			buffer[0x01] = ptrEffect->Continuous.startPosition;
+			buffer[0x02] = ptrEffect->Continuous.force;
+
+			break;
+
+		// Section
+		case DS5W::TriggerEffectType::SectionResitance:
+			// Mode
+			buffer[0x00] = 0x02;
+			// Parameters
+			buffer[0x01] = ptrEffect->Continuous.startPosition;
+			buffer[0x02] = ptrEffect->Continuous.force;
+
+			break;
+
+		// Calibrate
+		case DS5W::TriggerEffectType::Calibrate:
+			// Mode 
+			buffer[0x00] = 0xFC;
+
+			break;
+
+		// No resistance / default
+		case DS5W::TriggerEffectType::NoResitance:
+			__fallthrough;
+		default:
+			// All zero
+			buffer[0x00] = 0x00;
+			buffer[0x01] = 0x00;
+			buffer[0x02] = 0x00;
+
+			break;
+	}		
+
 }

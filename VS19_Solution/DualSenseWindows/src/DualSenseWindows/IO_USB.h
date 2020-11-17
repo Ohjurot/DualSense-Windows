@@ -15,8 +15,6 @@
 #include <DualSenseWindows/Device.h>
 #include <DualSenseWindows/DS5State.h>
 
-#include <DualSenseWindows/IO_TriggerFx.h>
-
 namespace __DS5W {
 	namespace USB {
 		/// <summary>
@@ -32,5 +30,12 @@ namespace __DS5W {
 		/// <param name="hidOutBuffer">HID Output buffer</param>
 		/// <param name="ptrOutputState">Pointer to state to read from</param>
 		void createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState);
+
+		/// <summary>
+		/// Process trigger
+		/// </summary>
+		/// <param name="ptrEffect">Pointer to effect to be applied</param>
+		/// <param name="buffer">Buffer for trigger parameters</param>
+		void processTrigger(DS5W::TriggerEffect* ptrEffect, unsigned char* buffer);
 	}
 }

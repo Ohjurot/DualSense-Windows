@@ -146,13 +146,15 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					outState.rightRumble = 0xFF;
 				}
 
-				DS5W::TriggerFX_Pos efm;
-				efm.type = DS5W_TRIGGER_FXTYPE_POS;
-				efm.startPosition = inState.rightStick.y + 128;
-				efm.force = inState.leftStick.y + 128;
-
-				outState.ptrLeftTriggerEffect = &efm;
-				outState.ptrRightTriggerEffect = &efm;
+				// Left trigger is clicky / section
+				outState.leftTriggerEffect.effectType = DS5W::TriggerEffectType::SectionResitance;
+				outState.leftTriggerEffect.Section.startPosition = 0x00;
+				outState.leftTriggerEffect.Section.endPosition = 0x80;
+				
+				// Right trigger is forcy
+				outState.rightTriggerEffect.effectType = DS5W::TriggerEffectType::ContinuousResitance;
+				outState.rightTriggerEffect.Continuous.startPosition = 0x00;
+				outState.rightTriggerEffect.Continuous.force = 0xFF;
 
 				DS5W::setDeviceOutputState(&con, &outState);
 			}

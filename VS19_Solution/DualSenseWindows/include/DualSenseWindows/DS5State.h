@@ -9,8 +9,6 @@
 */
 #pragma once
 
-#include <DualSenseWindows/TriggerFX.h>
-
 #define DS5W_ISTATE_BTX_SQUARE 0x10
 #define DS5W_ISTATE_BTX_CROSS 0x20
 #define DS5W_ISTATE_BTX_CIRCLE 0x40
@@ -108,6 +106,83 @@ namespace DS5W {
 		/// </summary>
 		PULSE = 0x02,
 	} MicLed;
+
+	/// <summary>
+	/// Type of trigger effect
+	/// </summary>
+	typedef enum _TriggerEffectType : unsigned char {
+		/// <summary>
+		/// No resistance is applied
+		/// </summary>
+		NoResitance = 0,
+
+		/// <summary>
+		/// Continuous Resitance is applied
+		/// </summary>
+		ContinuousResitance = 1,
+
+		/// <summary>
+		/// Seciton resistance is appleyed
+		/// </summary>
+		SectionResitance = 2,
+
+		/// <summary>
+		/// Calibrate triggers
+		/// </summary>
+		Calibrate = 255,
+	} TriggerEffectType;
+
+	/// <summary>
+	/// Trigger effect
+	/// </summary>
+	typedef struct _TriggerEffect {
+		/// <summary>
+		/// Trigger effect type
+		/// </summary>
+		TriggerEffectType effectType;
+
+		/// <summary>
+		/// Union for effect parameters
+		/// </summary>
+		union {
+			/// <summary>
+			/// Union one raw data
+			/// </summary>
+			unsigned char _u1_raw[2];
+
+			/// <summary>
+			/// For type == ContinuousResitance
+			/// </summary>
+			struct {
+				/// <summary>
+				/// Start position of resistance
+				/// </summary>
+				unsigned char startPosition;
+
+				/// <summary>
+				/// Force of resistance
+				/// </summary>
+				unsigned char force;
+			} Continuous;
+
+			/// <summary>
+			/// For type == SectionResitance
+			/// </summary>
+			struct {
+				/// <summary>
+				/// Start position of resistance
+				/// </summary>
+				unsigned char startPosition;
+
+				/// <summary>
+				/// End position of resistance (>= start)
+				/// </summary>
+				unsigned char endPosition;
+			} Section;
+		};
+
+		// TODO: Additional
+	} TriggerEffect;
 
 	/// <summary>
 	/// Input state of the controler
@@ -213,12 +288,12 @@ namespace DS5W {
 		/// <summary>
 		/// Effect of left trigger
 		/// </summary>
-		TriggerFX* ptrLeftTriggerEffect;
+		TriggerEffect leftTriggerEffect;
 
 		/// <summary>
 		/// Effect of right trigger
 		/// </summary>
-		TriggerFX* ptrRightTriggerEffect;
+		TriggerEffect rightTriggerEffect;
 
 	} DS5OutputState;
 }

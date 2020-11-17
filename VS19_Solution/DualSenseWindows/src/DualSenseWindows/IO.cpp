@@ -8,7 +8,6 @@
 	Licensed under the MIT License (To be found in repository root directory)
 */
 
-#include <DualSenseWindows/TriggerFX.h>
 #include <DualSenseWindows/IO.h>
 #include <DualSenseWindows/IO_BT.h>
 #include <DualSenseWindows/IO_USB.h>
@@ -40,13 +39,13 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 	bool inputArrOverflow = false;
 
 	// Enumerate over hid device
-	size_t devIndex = 0;
+	DWORD devIndex = 0;
 	SP_DEVINFO_DATA hidDiInfo;
 	hidDiInfo.cbSize = sizeof(SP_DEVINFO_DATA);
 	while (SetupDiEnumDeviceInfo(hidDiHandle, devIndex, &hidDiInfo)) {
 		
 		// Enumerate over all hid device interfaces
-		size_t ifIndex = 0;
+		DWORD ifIndex = 0;
 		SP_DEVICE_INTERFACE_DATA ifDiInfo;
 		ifDiInfo.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 		while (SetupDiEnumDeviceInterfaces(hidDiHandle, &hidDiInfo, &GUID_DEVINTERFACE_HID, ifIndex, &ifDiInfo)) {
@@ -212,18 +211,12 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
 	// Check if handle is existing
 	if (ptrContext->_internal.deviceHandle) {
-		// Create trigger move back report
-		DS5W::TriggerFX_Pos pos;
-		pos.type = DS5W_TRIGGER_FXTYPE_POS;
-		pos.startPosition = 0x00;
-		pos.force = 0x00;
-
 		// Send zero output report to disable all onging outputs
 		DS5W::DS5OutputState os;
 		ZeroMemory(&os, sizeof(DS5W::DS5OutputState));
+		os.leftTriggerEffect.effectType = TriggerEffectType::NoResitance;
+		os.rightTriggerEffect.effectType = TriggerEffectType::NoResitance;
 
-		os.ptrLeftTriggerEffect = &pos;
-		os.ptrRightTriggerEffect = &pos;
 		DS5W::setDeviceOutputState(ptrContext, &os);
 
 		// Close handle
@@ -355,4 +348,7 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 		// Return error
 		return DS5W_E_DEVICE_REMOVED;
 	}
+
+	// OK 
+	return DS5W_OK;
 }
