@@ -1,0 +1,31 @@
+% Deffinitions
+\documentclass[12pt, a4paper, oneside]{article}
+
+\usepackage{fancyhdr, ifpdf}
+\usepackage[ansinew]{inputenc}
+\usepackage{listings}
+\usepackage[hyphens]{url}
+
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+
+
+\pagestyle{fancyplain}
+
+% Document Entry
+\begin{document}
+
+% Title Sheet
+\author{ Ludwig F{\"u}chsl }
+\title{DualSense Windows API}
+\date{\today}
+\maketitle
+
+% Content
+\pagenumbering{arabic}
+\tableofcontents
+
+% Include
+\include{ImportantInfos}
+\include{Introduction}
+
+\end{document}

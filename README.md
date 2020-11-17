@@ -11,8 +11,7 @@ First Release coming soon!
 - ~~Controlling and reading the adaptive triggers.~~ DONE!
 - Writing basic Output state via bluetooth. *Work in progress*
 - Addition output parameters. *Work in progress*
-- Documenting the raw protocol.
-- Documenting the API
+- Documenting the API *Work in progress*
 - Updating the github repo and publish release
 
 First preview should be released before 28.11.2020 (The hard work is done - The USB protocol is, at least partially, reverse engineered)
@@ -43,7 +42,7 @@ Fully working over USB. Only limited input available over Bluetooth no output. (
 
 I have partially used the following sources to implement the functionality:
 
-- The GitHub community on this project
+- The GitHub community on this project and https://github.com/Ryochan7/DS4Windows/issues/1545
 - https://gist.github.com/dogtopus/894da226d73afb3bdd195df41b3a26aa
 - https://github.com/Ryochan7/DS4Windows/tree/dualsense-integration (Copyright (c) 2019 Travis Nickles - [MIT License](https://github.com/Ryochan7/DS4Windows/blob/jay/LICENSE.txt))
 - https://www.reddit.com/r/gamedev/comments/jumvi5/dualsense_haptics_leds_and_more_hid_output_report/
