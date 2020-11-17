@@ -94,6 +94,9 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		// Color intentsity
 		float intensity = 1.0f;
 
+		// Force
+		DS5W::TriggerEffectType rType = DS5W::TriggerEffectType::NoResitance;
+
 		// Application infinity loop
 		while (!(inState.buttonsA & DS5W_ISTATE_BTN_A_LEFT_BUMPER && inState.buttonsA & DS5W_ISTATE_BTN_A_RIGHT_BUMPER)) {
 			// Get input state
@@ -134,9 +137,11 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				console.writeLine(builder);
 
 				// === Write Output ===
+				// Rumbel
 				outState.leftRumble = max(outState.leftRumble - 2L, 0);
 				outState.rightRumble = max(outState.rightRumble - 1L, 0);
 
+				// Lightbar
 				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(25, 45, 161, intensity);
 				intensity -= 0.0025f;
 				if (intensity <= 0.0f) {
@@ -146,15 +151,36 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					outState.rightRumble = 0xFF;
 				}
 
+				// Player led
+				if (outState.rightRumble) {
+					outState.playerLeds.playerLedFade = true;
+					outState.playerLeds.bitmask = DS5W_OSTATE_PLAYER_LED_MIDDLE;
+					outState.playerLeds.brightness = DS5W::LedBrightness::HIGH;
+				}
+				else {
+					outState.playerLeds.bitmask = 0;
+				}
+
+				// Set force
+				if (inState.rightTrigger == 0xFF) {
+					rType = DS5W::TriggerEffectType::ContinuousResitance;
+				} else if (inState.rightTrigger == 0x00) {
+					rType = DS5W::TriggerEffectType::NoResitance;
+				}
+
 				// Left trigger is clicky / section
-				outState.leftTriggerEffect.effectType = DS5W::TriggerEffectType::SectionResitance;
-				outState.leftTriggerEffect.Section.startPosition = 0x00;
-				outState.leftTriggerEffect.Section.endPosition = 0x80;
-				
+				outState.leftTriggerEffect.effectType = DS5W::TriggerEffectType::EffectEx;
+				outState.leftTriggerEffect.EffectEx.startPosition = 0x00;
+				outState.leftTriggerEffect.EffectEx.keepEffect = true;
+				outState.leftTriggerEffect.EffectEx.beginForce = 0xFF;
+				outState.leftTriggerEffect.EffectEx.middleForce = 0x00;
+				outState.leftTriggerEffect.EffectEx.endForce = 0x00;
+				outState.leftTriggerEffect.EffectEx.frequency = 0xA0;
+
 				// Right trigger is forcy
-				outState.rightTriggerEffect.effectType = DS5W::TriggerEffectType::ContinuousResitance;
-				outState.rightTriggerEffect.Continuous.startPosition = 0x00;
+				outState.rightTriggerEffect.effectType = rType;
 				outState.rightTriggerEffect.Continuous.force = 0xFF;
+				outState.rightTriggerEffect.Continuous.startPosition = 0x00;				
 
 				DS5W::setDeviceOutputState(&con, &outState);
 			}

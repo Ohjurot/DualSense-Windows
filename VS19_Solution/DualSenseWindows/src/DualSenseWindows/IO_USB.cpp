@@ -95,7 +95,16 @@ void __DS5W::USB::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5Ou
 	hidOutBuffer[0x09] = (unsigned char)ptrOutputState->microphoneLed;
 
 	// Player led
-	hidOutBuffer[0x2C] = ptrOutputState->playerLeds;
+	hidOutBuffer[0x2C] = ptrOutputState->playerLeds.bitmask;
+	if (ptrOutputState->playerLeds.playerLedFade) {
+		hidOutBuffer[0x2C] &= ~(0x20);
+	} else {
+		hidOutBuffer[0x2C] |= 0x20;
+	}
+
+	// Player led brightness
+	hidOutBuffer[0x27] = 0x01;
+	hidOutBuffer[0x2B] = ptrOutputState->playerLeds.brightness;
 
 	// Lightbar
 	hidOutBuffer[0x2D] = ptrOutputState->lightbar.r;
@@ -132,6 +141,25 @@ void __DS5W::USB::processTrigger(DS5W::TriggerEffect* ptrEffect, unsigned char* 
 
 			break;
 
+		// EffectEx
+		case DS5W::TriggerEffectType::EffectEx:
+			// Mode
+			buffer[0x00] = 0x02 | 0x20 | 0x04;
+			// Parameters
+			buffer[0x01] = 0xFF - ptrEffect->EffectEx.startPosition;
+			// Keep flag
+			if (ptrEffect->EffectEx.keepEffect) {
+				buffer[0x02] = 0x02;
+			}
+			// Forces
+			buffer[0x04] = ptrEffect->EffectEx.beginForce;
+			buffer[0x05] = ptrEffect->EffectEx.middleForce;
+			buffer[0x06] = ptrEffect->EffectEx.endForce;
+			// Frequency
+			buffer[0x09] = max(1, ptrEffect->EffectEx.frequency / 2);
+
+			break;
+
 		// Calibrate
 		case DS5W::TriggerEffectType::Calibrate:
 			// Mode 
@@ -150,5 +178,4 @@ void __DS5W::USB::processTrigger(DS5W::TriggerEffect* ptrEffect, unsigned char* 
 
 			break;
 	}		
-
 }

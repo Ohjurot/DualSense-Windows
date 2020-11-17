@@ -114,22 +114,27 @@ namespace DS5W {
 		/// <summary>
 		/// No resistance is applied
 		/// </summary>
-		NoResitance = 0,
+		NoResitance = 0x00,
 
 		/// <summary>
 		/// Continuous Resitance is applied
 		/// </summary>
-		ContinuousResitance = 1,
+		ContinuousResitance = 0x01,
 
 		/// <summary>
 		/// Seciton resistance is appleyed
 		/// </summary>
-		SectionResitance = 2,
+		SectionResitance = 0x02,
+
+		/// <summary>
+		/// Extended trigger effect
+		/// </summary>
+		EffectEx = 0x26,
 
 		/// <summary>
 		/// Calibrate triggers
 		/// </summary>
-		Calibrate = 255,
+		Calibrate = 0xFC,
 	} TriggerEffectType;
 
 	/// <summary>
@@ -148,7 +153,7 @@ namespace DS5W {
 			/// <summary>
 			/// Union one raw data
 			/// </summary>
-			unsigned char _u1_raw[2];
+			unsigned char _u1_raw[6];
 
 			/// <summary>
 			/// For type == ContinuousResitance
@@ -163,6 +168,11 @@ namespace DS5W {
 				/// Force of resistance
 				/// </summary>
 				unsigned char force;
+
+				/// <summary>
+				/// PAD / UNUSED
+				/// </summary>
+				unsigned char _pad[4];
 			} Continuous;
 
 			/// <summary>
@@ -178,11 +188,89 @@ namespace DS5W {
 				/// End position of resistance (>= start)
 				/// </summary>
 				unsigned char endPosition;
+				
+				/// <summary>
+				/// PAD / UNUSED
+				/// </summary>
+				unsigned char _pad[4];
 			} Section;
-		};
 
-		// TODO: Additional
+			/// <summary>
+			/// For type == EffectEx
+			/// </summary>
+			struct {
+				/// <summary>
+				/// Position at witch the effect starts
+				/// </summary>
+				unsigned char startPosition;
+
+				/// <summary>
+				/// Wher the effect should keep playing when trigger goes beyond 255
+				/// </summary>
+				bool keepEffect;
+
+				/// <summary>
+				/// Force applied when trigger >= (255 / 2)
+				/// </summary>
+				unsigned char beginForce;
+
+				/// <summary>
+				/// Force applied when trigger <= (255 / 2)
+				/// </summary>
+				unsigned char middleForce;
+
+				/// <summary>
+				/// Force applied when trigger is beyond 255
+				/// </summary>
+				unsigned char endForce;
+
+				/// <summary>
+				/// Vibration frequency of the trigger
+				/// </summary>
+				unsigned char frequency;
+			} EffectEx;
+		};
 	} TriggerEffect;
+
+	/// <summary>
+	/// Led brightness
+	/// </summary>
+	typedef enum _LedBrightness : unsigned char {
+		/// <summary>
+		/// Low led brightness
+		/// </summary>
+		LOW = 0x02,
+
+		/// <summary>
+		/// Medium led brightness
+		/// </summary>
+		MEDIUM = 0x01,
+
+		/// <summary>
+		/// High led brightness
+		/// </summary>
+		HIGH = 0x00,
+	} LedBrightness;
+
+	/// <summary>
+	/// Player leds values
+	/// </summary>
+	typedef struct _PlayerLeds {
+		/// <summary>
+		/// Player indication leds bitflag (You may used them for other features) DS5W_OSTATE_PLAYER_LED_???
+		/// </summary>
+		unsigned char bitmask;
+
+		/// <summary>
+		/// Indicates weather the player leds should fade in
+		/// </summary>
+		bool playerLedFade;
+
+		/// <summary>
+		/// Brightness of the player leds
+		/// </summary>
+		LedBrightness brightness;
+	} PlayerLeds;
 
 	/// <summary>
 	/// Input state of the controler
@@ -276,9 +364,9 @@ namespace DS5W {
 		MicLed microphoneLed;
 
 		/// <summary>
-		/// Player indication leds bitflag (You may used them for other features) DS5W_OSTATE_PLAYER_LED_???
+		/// Player leds
 		/// </summary>
-		unsigned char playerLeds;
+		PlayerLeds playerLeds;
 
 		/// <summary>
 		/// Color of the lightbar
