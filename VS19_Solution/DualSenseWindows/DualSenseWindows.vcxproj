@@ -315,14 +315,14 @@
     <ClInclude Include="include\DualSenseWindows\Helpers.h" />
     <ClInclude Include="include\DualSenseWindows\IO.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="src\DualSenseWindows\IO_BT.h" />
-    <ClInclude Include="src\DualSenseWindows\IO_USB.h" />
+    <ClInclude Include="src\DualSenseWindows\DS5_Input.h" />
+    <ClInclude Include="src\DualSenseWindows\DS5_Output.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DualSenseWindows\DS5_Input.cpp" />
+    <ClCompile Include="src\DualSenseWindows\DS5_Output.cpp" />
     <ClCompile Include="src\DualSenseWindows\Helpers.cpp" />
     <ClCompile Include="src\DualSenseWindows\IO.cpp" />
-    <ClCompile Include="src\DualSenseWindows\IO_BT.cpp" />
-    <ClCompile Include="src\DualSenseWindows\IO_USB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DualSenseWindows.rc" />

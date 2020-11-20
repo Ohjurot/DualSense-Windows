@@ -9,8 +9,8 @@
 */
 
 #include <DualSenseWindows/IO.h>
-#include <DualSenseWindows/IO_BT.h>
-#include <DualSenseWindows/IO_USB.h>
+#include <DualSenseWindows/DS5_Input.h>
+#include <DualSenseWindows/DS5_Output.h>
 
 #define NOMINMAX
 
@@ -193,6 +193,13 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 	// Get input report length
 	unsigned short reportLength = 0;
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		// Start BT by reading feature report 5
+		unsigned char fBuffer[64];
+		fBuffer[0] = 0x05;
+		if (!HidD_GetFeature(deviceHandle, fBuffer, 64)) {
+			return DS5W_E_BT_COM;
+		}
+		
 		// The bluetooth input report is 78 Bytes long
 		reportLength = 547;
 	}
@@ -273,14 +280,15 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
 		// The bluetooth input report is 78 Bytes long
 		inputReportLength = 78;
+		ptrContext->_internal.hidBuffer[0] = 0x31;
 	}
 	else {
 		// The usb input report is 64 Bytes long
 		inputReportLength = 64;
+		ptrContext->_internal.hidBuffer[0] = 0x01;
 	}
 
 	// Get device input
-	ptrContext->_internal.hidBuffer[0] = 0x01;
 	if (!ReadFile(ptrContext->_internal.deviceHandle, ptrContext->_internal.hidBuffer, inputReportLength, NULL, NULL)) {
 		// Close handle and set error state
 		CloseHandle(ptrContext->_internal.deviceHandle);
@@ -294,10 +302,10 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 	// Evaluete input buffer
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
 		// Call bluetooth evaluator if connection is qual to BT
-		__DS5W::BT::evaluateHidInputBuffer(ptrContext->_internal.hidBuffer, ptrInputState);
+		__DS5W::Input::evaluateHidInputBuffer(&ptrContext->_internal.hidBuffer[2], ptrInputState);
 	} else {
 		// Else it is USB so call its evaluator
-		__DS5W::USB::evaluateHidInputBuffer(ptrContext->_internal.hidBuffer, ptrInputState);
+		__DS5W::Input::evaluateHidInputBuffer(&ptrContext->_internal.hidBuffer[1], ptrInputState);
 	}
 	
 
@@ -316,17 +324,6 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 		return DS5W_E_DEVICE_REMOVED;
 	}
 
-	// Build output buffer
-	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
-		// Call bluetooth evaluator if connection is qual to BT
-		// return DS5W_E_CURRENTLY_NOT_SUPPORTED;
-		__DS5W::USB::createHidOutputBuffer(ptrContext->_internal.hidBuffer, ptrOutputState);
-	}
-	else {
-		// Else it is USB so call its evaluator
-		__DS5W::USB::createHidOutputBuffer(ptrContext->_internal.hidBuffer, ptrOutputState);
-	}
-
 	// Get otuput report length
 	unsigned short outputReportLength = 0;
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
@@ -336,6 +333,21 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 	else {
 		// The usb input report is 48 Bytes long
 		outputReportLength = 48;
+	}
+
+	// Cleat all input data
+	ZeroMemory(ptrContext->_internal.hidBuffer, outputReportLength);
+
+	// Build output buffer
+	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
+		return DS5W_E_CURRENTLY_NOT_SUPPORTED;
+	}
+	else {
+		// Report type
+		ptrContext->_internal.hidBuffer[0x00] = 0x02;
+
+		// Else it is USB so call its evaluator
+		__DS5W::Output::createHidOutputBuffer(&ptrContext->_internal.hidBuffer[1], ptrOutputState);
 	}
 
 	// Write to controller
