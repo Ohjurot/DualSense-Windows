@@ -9,6 +9,7 @@
 */
 
 #include <DualSenseWindows/IO.h>
+#include <DualSenseWindows/DS_CRC32.h>
 #include <DualSenseWindows/DS5_Input.h>
 #include <DualSenseWindows/DS5_Output.h>
 
@@ -327,7 +328,7 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 	// Get otuput report length
 	unsigned short outputReportLength = 0;
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
-		// The bluetooth input report is ?? Bytes long
+		// The bluetooth input report is 547 Bytes long
 		outputReportLength = 547;
 	}
 	else {
@@ -340,7 +341,20 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 
 	// Build output buffer
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
-		return DS5W_E_CURRENTLY_NOT_SUPPORTED;
+		//return DS5W_E_CURRENTLY_NOT_SUPPORTED;
+		// Report type
+		ptrContext->_internal.hidBuffer[0x00] = 0x31;
+		ptrContext->_internal.hidBuffer[0x01] = 0x02;
+		__DS5W::Output::createHidOutputBuffer(&ptrContext->_internal.hidBuffer[2], ptrOutputState);
+
+		// Hash
+		const UINT32 crcChecksum = __DS5W::CRC32::compute(ptrContext->_internal.hidBuffer, 74);
+
+		ptrContext->_internal.hidBuffer[0x4A] = (unsigned char)((crcChecksum & 0x000000FF) >> 0UL);
+		ptrContext->_internal.hidBuffer[0x4B] = (unsigned char)((crcChecksum & 0x0000FF00) >> 8UL);
+		ptrContext->_internal.hidBuffer[0x4C] = (unsigned char)((crcChecksum & 0x00FF0000) >> 16UL);
+		ptrContext->_internal.hidBuffer[0x4D] = (unsigned char)((crcChecksum & 0xFF000000) >> 24UL);
+		
 	}
 	else {
 		// Report type

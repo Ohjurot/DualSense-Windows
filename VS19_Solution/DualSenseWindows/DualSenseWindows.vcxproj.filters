@@ -39,6 +39,9 @@
     <ClInclude Include="src\DualSenseWindows\DS5_Output.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\DualSenseWindows\DS_CRC32.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DualSenseWindows\IO.cpp">
@@ -51,6 +54,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\DualSenseWindows\DS5_Output.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DualSenseWindows\DS_CRC32.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

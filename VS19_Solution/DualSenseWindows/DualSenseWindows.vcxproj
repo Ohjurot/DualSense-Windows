@@ -130,6 +130,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -137,6 +138,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -144,6 +146,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -151,6 +154,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -158,6 +162,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -165,6 +170,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -172,6 +178,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -179,6 +186,7 @@
     <IntDir>$(SolutionDir)bin\int\$(ProjectName)\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>ds5w_$(PlatformShortName)</TargetName>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -187,6 +195,7 @@
       <PreprocessorDefinitions>_DEBUG;DS5W_BUILD_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -201,6 +210,7 @@
       <PreprocessorDefinitions>_DEBUG;DS5W_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -217,6 +227,7 @@
       <PreprocessorDefinitions>NDEBUG;DS5W_BUILD_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -235,6 +246,7 @@
       <PreprocessorDefinitions>NDEBUG;DS5W_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -251,6 +263,7 @@
       <PreprocessorDefinitions>_DEBUG;DS5W_BUILD_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -265,6 +278,7 @@
       <PreprocessorDefinitions>_DEBUG;DS5W_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -281,6 +295,7 @@
       <PreprocessorDefinitions>NDEBUG;DS5W_BUILD_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -299,6 +314,7 @@
       <PreprocessorDefinitions>NDEBUG;DS5W_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -317,10 +333,12 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\DualSenseWindows\DS5_Input.h" />
     <ClInclude Include="src\DualSenseWindows\DS5_Output.h" />
+    <ClInclude Include="src\DualSenseWindows\DS_CRC32.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DualSenseWindows\DS5_Input.cpp" />
     <ClCompile Include="src\DualSenseWindows\DS5_Output.cpp" />
+    <ClCompile Include="src\DualSenseWindows\DS_CRC32.cpp" />
     <ClCompile Include="src\DualSenseWindows\Helpers.cpp" />
     <ClCompile Include="src\DualSenseWindows\IO.cpp" />
   </ItemGroup>
