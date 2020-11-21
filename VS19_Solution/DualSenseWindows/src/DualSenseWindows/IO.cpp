@@ -224,6 +224,7 @@ DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
 		ZeroMemory(&os, sizeof(DS5W::DS5OutputState));
 		os.leftTriggerEffect.effectType = TriggerEffectType::NoResitance;
 		os.rightTriggerEffect.effectType = TriggerEffectType::NoResitance;
+		os.disableLeds = true;
 
 		DS5W::setDeviceOutputState(ptrContext, &os);
 

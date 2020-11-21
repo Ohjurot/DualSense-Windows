@@ -9,16 +9,17 @@ First Release coming soon!
 - ~~Reading input via bluetooth~~. DONE!
 - ~~Writing Output state to the controller using USB~~. DONE!
 - ~~Controlling and reading the adaptive triggers.~~ DONE!
-- Writing basic Output state via bluetooth. *Work in progress*
+- ~~Writing Output state via bluetooth.~~ DONE!
 - Addition input / output parameters. *Work in progress*
+- Calibrating the gyroscope *Work in progress*
 - Documenting the API *Work in progress*
 - Updating the github repo and publish release
 
-First preview should be released before 28.11.2020 (The hard work is done - The USB protocol is, at least partially, reverse engineered)
+First preview should be released before 28.11.2020 (The hard work is done - The USB and BT protocol is, at least partially, reverse engineered)
 
 #### Features of the first preview
 
-- Reading **all** buttons and analog values (triggers and sticks) which are on the controller
+- Reading all buttons and analog values (triggers and sticks) which are on the controller
 - Reading the two finger touch positions
 - Reading the accelerometer
 - Reading the  gyroscope (Currently only raw / uncalibrated values) 
@@ -28,14 +29,12 @@ First preview should be released before 28.11.2020 (The hard work is done - The 
 - Retrieving force feedback triggers feedback
 - controlling the RGB-Leds, Microphone Led and User Leds 
 
-Fully working over USB.  No output via Bluetooth (Maybe coming soon)
+Fully working over USB and Bluetooth! 
 
 #### Feature planed for the future
 
-- Calibrating the gyroscope 
 - Using the haptic feedback
-- More trigger effects?
-- Fully write over bluetooth (If you know something about the wireless protocol - especial writing data to the controller - please let me know by creating an issue!) 
+- Internal speaker and mic
 
 #### Sources
 

@@ -87,6 +87,23 @@ namespace DS5W {
 		unsigned int y;
 	} Touch;
 
+	typedef struct _Battery {
+		/// <summary>
+		/// Charching state of the battery
+		/// </summary>
+		bool chargin;
+
+		/// <summary>
+		/// Indicates that the battery is fully charged
+		/// </summary>
+		bool fullyCharged;
+
+		/// <summary>
+		/// Battery charge level 0x0 to 
+		/// </summary>
+		unsigned char level;
+	}Battery;
+
 	/// <summary>
 	/// State of the mic led
 	/// </summary>
@@ -332,6 +349,11 @@ namespace DS5W {
 		Touch touchPoint2;
 
 		/// <summary>
+		/// Battery information
+		/// </summary>
+		Battery battery;
+
+		/// <summary>
 		/// Indicates the connection of headphone
 		/// </summary>
 		bool headPhoneConnected;
@@ -362,6 +384,11 @@ namespace DS5W {
 		/// State of the microphone led
 		/// </summary>
 		MicLed microphoneLed;
+
+		/// <summary>
+		/// Diables all leds
+		/// </summary>
+		bool disableLeds;
 
 		/// <summary>
 		/// Player leds

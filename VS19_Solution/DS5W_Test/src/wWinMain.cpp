@@ -103,9 +103,13 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 		// Color intentsity
 		float intensity = 1.0f;
+		uint16_t lrmbl = 0.0;
+		uint16_t rrmbl = 0.0;
 
 		// Force
 		DS5W::TriggerEffectType rType = DS5W::TriggerEffectType::NoResitance;
+
+		int btMul = con._internal.connection == DS5W::DeviceConnection::BT ? 10 : 1;
 
 		// Application infinity loop
 		while (!(inState.buttonsA & DS5W_ISTATE_BTN_A_LEFT_BUMPER && inState.buttonsA & DS5W_ISTATE_BTN_A_RIGHT_BUMPER)) {
@@ -134,6 +138,8 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				builder << L"Finger 1\tX: " << inState.touchPoint1.x << L"\t Y: " << inState.touchPoint1.y << std::endl;
 				builder << L"Finger 2\tX: " << inState.touchPoint2.x << L"\t Y: " << inState.touchPoint2.y << std::endl << std::endl;
 
+				builder << L"Battery: " << inState.battery.level << (inState.battery.chargin ? L" Charging" : L"") << (inState.battery.fullyCharged ? L"  Fully charged" : L"") << std::endl << std::endl;
+
 				builder << (inState.buttonsB & DS5W_ISTATE_BTN_B_PLAYSTATION_LOGO ? L"PLAYSTATION" : L"") << (inState.buttonsB & DS5W_ISTATE_BTN_B_MIC_BUTTON ? L"\tMIC" : L"") << std::endl;;
 
 				// Ommited accel and gyro
@@ -143,17 +149,20 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 				// === Write Output ===
 				// Rumbel
-				outState.leftRumble = max(outState.leftRumble - 2L, 0);
-				outState.rightRumble = max(outState.rightRumble - 1L, 0);
+				lrmbl = max(lrmbl - 0x200 / btMul, 0);
+				rrmbl = max(rrmbl - 0x100 / btMul, 0);
+
+				outState.leftRumble = (lrmbl & 0xFF00) >> 8UL;
+				outState.rightRumble = (rrmbl & 0xFF00) >> 8UL;
 
 				// Lightbar
-				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(25, 45, 161, intensity);
-				intensity -= 0.0025f;
+				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(255, 0, 0, intensity);
+				intensity -= 0.0025f / btMul;
 				if (intensity <= 0.0f) {
 					intensity = 1.0f;
 
-					outState.leftRumble = 0xFF;
-					outState.rightRumble = 0xFF;
+					lrmbl = 0xFF00;
+					rrmbl = 0xFF00;
 				}
 
 				// Player led
@@ -173,14 +182,18 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 					rType = DS5W::TriggerEffectType::NoResitance;
 				}
 
+				// Mic led
+				if (inState.buttonsB & DS5W_ISTATE_BTN_B_MIC_BUTTON) {
+					outState.microphoneLed = DS5W::MicLed::ON;
+				}
+				else if (inState.buttonsB & DS5W_ISTATE_BTN_B_PLAYSTATION_LOGO) {
+					outState.microphoneLed = DS5W::MicLed::OFF;
+				}
+
 				// Left trigger is clicky / section
-				outState.leftTriggerEffect.effectType = DS5W::TriggerEffectType::EffectEx;
-				outState.leftTriggerEffect.EffectEx.startPosition = 0x00;
-				outState.leftTriggerEffect.EffectEx.keepEffect = true;
-				outState.leftTriggerEffect.EffectEx.beginForce = 0xFF;
-				outState.leftTriggerEffect.EffectEx.middleForce = 0x00;
-				outState.leftTriggerEffect.EffectEx.endForce = 0x00;
-				outState.leftTriggerEffect.EffectEx.frequency = 0xA0;
+				outState.leftTriggerEffect.effectType = DS5W::TriggerEffectType::SectionResitance;
+				outState.leftTriggerEffect.Section.startPosition = 0x00;
+				outState.leftTriggerEffect.Section.endPosition = 0x40;
 
 				// Right trigger is forcy
 				outState.rightTriggerEffect.effectType = rType;

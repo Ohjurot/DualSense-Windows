@@ -22,7 +22,8 @@ void __DS5W::Output::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS
 	}
 
 	// Player led brightness
-	hidOutBuffer[0x26] = 0x01;
+	hidOutBuffer[0x26] = 0x03;
+	hidOutBuffer[0x29] = ptrOutputState->disableLeds ? 0x01 : 0x2;
 	hidOutBuffer[0x2A] = ptrOutputState->playerLeds.brightness;
 
 	// Lightbar
