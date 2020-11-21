@@ -76,7 +76,7 @@ void __DS5W::Input::evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5
 	ptrInputState->rightTriggerFeedback = hidInBuffer[0x29];
 
 	// Battery
-	ptrInputState->battery.chargin = (hidInBuffer[0x35] & 0x10);
-	ptrInputState->battery.fullyCharged = (hidInBuffer[0x35] & 0x20);
-	ptrInputState->battery.level = (hidInBuffer[0x35] & 0xF);
+	ptrInputState->battery.chargin = (hidInBuffer[0x35] & 0x08);
+	ptrInputState->battery.fullyCharged = (hidInBuffer[0x36] & 0x20);
+	ptrInputState->battery.level = (hidInBuffer[0x36] & 0x0F);
 }
