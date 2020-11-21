@@ -36,6 +36,10 @@ Fully working over USB and Bluetooth!
 - Using the haptic feedback
 - Internal speaker and mic
 
+#### Know issues 
+
+- When the controller being shut down while connected via Bluetooth (Holding the PS button). The lib will encounter a dead lock within `getDeviceInputState(...)` call. The function will return as soon as the controller is getting reconnected. Not encountering over USB, over USB the expected `DS5W_E_DEVICE_REMOVED` error is returned. 
+
 #### Sources
 
 I have partially used the following sources to implement the functionality:
