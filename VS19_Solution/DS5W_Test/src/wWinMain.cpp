@@ -193,7 +193,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				// Left trigger is clicky / section
 				outState.leftTriggerEffect.effectType = DS5W::TriggerEffectType::SectionResitance;
 				outState.leftTriggerEffect.Section.startPosition = 0x00;
-				outState.leftTriggerEffect.Section.endPosition = 0x40;
+				outState.leftTriggerEffect.Section.endPosition = 0x60;
 
 				// Right trigger is forcy
 				outState.rightTriggerEffect.effectType = rType;

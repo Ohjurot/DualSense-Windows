@@ -79,3 +79,36 @@ All the listed buttons are readable through individual binary values.
     \caption{Left to right, top to bottom: Share, Menu, PlayStation and Mic Button}
 \end{figure}
 
+\paragraph{Touch Pad}
+The touch-pad and the surrounding lightbar are featuring several functions:
+\begin{itemize}
+	\item \textbf{Dual finger touch} The touch-pad itself is able to track two fingers simultaneously.
+	\item \textbf{Integrated push button} The touch-pad integrates as momentary push button operated by pushing the pad down.
+	\item \textbf{Lightbar} The left and right surrounding is able to light up in full 8-Bit RGB colors. The lib is providing several helpers to convert other color formats to the 8-Bit RGB UCHAR formate.
+	\item \textbf{Player indication LEDs} On the bottom of the touch-pad are five player indication LEDs located. Thees LEDs are group in one left, three middle and one right led. The brightness of the LEDs is controllable and the LEDs are able to fade in.
+\end{itemize}
+When using the touch-pad make sure to implement hysteresis, dead zones and tolerances. It may also helpful to accumulate the values over multiple frame to get a more stable result but this will also increase latency. 
+\begin{figure}[H]
+    \centering
+    \subfloat{{\includegraphics[width=8cm]{frontView_touch} }}
+    \caption{Touch Pad}
+\end{figure}
+
+\paragraph{Accelerometer and Gyroscope}
+The DualSense controller is able to measure its acceleration (By moving the controller around) and to track its rotation. Measurements are done with 16-Bit precision in all three XYZ-Axis. Make sure to implement hysteresis, dead zones and tolerances. It may also helpful to accumulate the values over multiple frame to get a more stable result but this will also increase latency.
+\begin{itemize}
+	\item \textbf{Accelerometer} Measures the acceleration.
+	\item \textbf{Gyroscope} Measures the controllers rotation. Currently you have to implement calibration in your own codebase. 
+\end{itemize}
+
+\paragraph{Rumble motors / Haptic feedback}
+The DualSense feature two Haptic feedback devices. Thees device work similar like normal speaker, but they are not good in producing tones, they are good in producing vibration. It is possible to send an audio signal directly to those haptic speakers (However currently not supported by this API).\\
+The controller supports simulating the normal soft and hard rumble motors using the haptic speakers. When using this mode both motors can be controlled with the usual 8-Bit values. The left rumble feels hard, the right one soft.
+
+\paragraph{Integrated speaker and microphone}
+Featuring two microphones and one mono speaker, the DualSense is able to produce and pickup audio. This features will be supported in the future. However it is possible to address thees devices with the default WASAPI independently. 
+
+\paragraph{Stereo audio jack}
+Directly under the little microphone icon is a stereo headphone audio jack. It is possible to retrieve the connection status of this jack. However just like the speaker it is currently not supported to produce audio through the API.
+
+\newpage
