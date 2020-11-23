@@ -1,10 +1,62 @@
 \section{Installation}
-Bla install
+We recommend using the prebuild dynamically linked release. But it is also possible to build the API from source. This might be the only way if you want to...
+\begin{itemize}
+	\item statically link the library.
+	\item get the latest (maybe unstable and undocumented) development release.
+	\item sign and supply your company info inside the DLL info.
+	\item make changes to the source code to better fit your application.
+\end{itemize}
 
 \subsection{Prebuild installation}
-prebuild
+Before stating the integration process please make sure you have the latest release. You can find all releases here: \url{https://github.com/Ohjurot/DualSense-Windows/releases}\\
+
+Inside the downloaded zip file you will find the following files:
+\dirtree{%
+.1 DualSenseWindows.zip.
+.2 ds5w.h.
+.2 ds5w\_x64.dll.
+.2 ds5w\_x64.lib.
+.2 ds5w\_x86.dll.
+.2 ds5w\_x86.lib.
+.2 DualSenseWindows.pdf.
+.2 LICENSE.
+}
+~\\
+
+The PDF file is the latest version of the document your are currently reading and LICENSE is a copy of the repository license file. All other files are required for integration into your project, thees steps will be explained next.
+
+\paragraph{Including the header file}
+When using the releases from the github page the single header \texttt{ds5w.h} is used. You can copy paste this file into the vendor directory of your project (The exact directory doesn't matter as far as it is accessible as a include directory). 
+
+\paragraph{Copying the binary DLL}
+The API is coming with two different DLLs:
+\begin{itemize}
+	\item \textbf{ds5w\_x64.dll} Used when building x64 / 64-Bit projects.
+	\item \textbf{ds5w\_x86.dll} Used when building x86 / Win32 / 32-Bit projects.
+\end{itemize}
+Copy the DLL matching your target build to the output directory of your project.
+
+\paragraph{Referencing the LIB file}
+In order to compile your project successfully it is required to add the included lib file to the linker input. First you need to copy the lib file to your projects lib directory. Chose the lib file according to the name of the DLL you picked. After copying the file you have to add the files name to the linker input.  
 
 \subsection{Self build installation}
-own build
+First you need to download or clone the project to your computer (We recommend to use the github tags to get the code that matches a specific release). Please check if you have the following prerequisites:
+\begin{itemize}
+	\item VisualStudio \texttt{16.8.0} or later
+	\item Windows SDK \texttt{10.0.19041.0} (Other version will probably work... Try to match the SDK version with the SDK version of your project!)
+	\item Platform toolset \texttt{Visual Studio 2019 (v142)} Other version will probably work... Try to match with your project!)
+	\item Windows Driver Kit (WDK) Version \texttt{10.0.19041.1} or later minor versions. (Should match your major SDK version. This part matters: 10.0.19041)
+\end{itemize}
+After downloading the project you can open the project by double-clicking the file \texttt{VS19\_Solution\textbackslash VS19\_Solution.sln}\\
+Building the project is very easy! Just execute a batch-built by selecting \texttt{Build \textrightarrow \ Batch Build \textrightarrow \ Select All \textrightarrow \ Build}. After building the library you can find several configurations under the following path\\
+\texttt{VS19\_Solution\textbackslash bin\textbackslash DualSenseWindows\textbackslash}...
+\begin{itemize}
+	\item \texttt{DebugDll-x64 / DebugDll-x86} Debug DLL version for 64/32-Bit
+	\item \texttt{ReleaseDll-x64 / ReleaseDll-x86} Release DLL version for 64/32-Bit
+	\item \texttt{Debug-x64 / Debug-x64} Debug static link version for 64/32-Bit
+	\item \texttt{Release-x64 / Release-x86} Release static link version for 64/32-Bit
+\end{itemize}
+Every self build version will be based on several header filed located in \texttt{VS19\_Solution\textbackslash DualSenseWindows\textbackslash include\textbackslash DualSenseWindows}.\\
+Attention: When using the static link version your application needs additional linking to \texttt{hid.lib} and \texttt{setupapi.lib} from the Windows Driver Kit. It is also required to define \texttt{DS5W\_USE\_LIB} to prevent the DLL import attempt. 
 
 \newpage
