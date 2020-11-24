@@ -76,7 +76,7 @@ namespace DS5W {
 			/// <summary>
 			/// HID Input buffer (will be allocated by the context init function)
 			/// </summary>
-			unsigned char* hidBuffer;
+			unsigned char hidBuffer[547];
 		}_internal;
 	} DeviceContext;
 }

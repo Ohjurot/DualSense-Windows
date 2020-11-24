@@ -23,7 +23,7 @@
 #define DS5W_ISTATE_BTN_A_LEFT_TRIGGER 0x04
 #define DS5W_ISTATE_BTN_A_RIGHT_TRIGGER 0x08
 #define DS5W_ISTATE_BTN_A_SELECT 0x10
-#define DS5W_ISTATE_BTN_A_MENUE 0x20
+#define DS5W_ISTATE_BTN_A_MENU 0x20
 #define DS5W_ISTATE_BTN_A_LEFT_STICK 0x40
 #define DS5W_ISTATE_BTN_A_RIGHT_STICK 0x80
 
@@ -127,7 +127,7 @@ namespace DS5W {
 	/// <summary>
 	/// Type of trigger effect
 	/// </summary>
-	typedef enum _TriggerEffectType : unsigned char {
+	typedef enum class _TriggerEffectType : unsigned char {
 		/// <summary>
 		/// No resistance is applied
 		/// </summary>

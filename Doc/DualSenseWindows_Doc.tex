@@ -9,7 +9,37 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{dirtree}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{tabularx}
 
+
+\definecolor{clr-background}{RGB}{255,255,255}
+\definecolor{clr-text}{RGB}{0,0,0}
+\definecolor{clr-string}{RGB}{163,21,21}
+\definecolor{clr-namespace}{RGB}{0,0,0}
+\definecolor{clr-keyword}{RGB}{0,0,255}
+\definecolor{clr-type}{RGB}{43,145,175}
+\definecolor{clr-variable}{RGB}{0,0,0}
+\definecolor{clr-constant}{RGB}{111,0,138}
+\definecolor{clr-comment}{RGB}{0,128,0}
+
+\lstdefinestyle{VSC}{
+	backgroundcolor=\color{clr-background},
+	basicstyle=\color{clr-text},
+	stringstyle=\color{clr-string},
+	identifierstyle=\color{clr-variable},
+	commentstyle=\color{clr-comment},
+	keywordstyle=\color{clr-type},
+	keywordstyle={[2]\color{clr-constant}},
+	tabsize=4,
+	numbers=left,
+	numbersep=5pt
+}
+
+\lstloadlanguages{[Visual]C++}
+\lstset{style=VSC}
+                
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
 
@@ -34,5 +64,6 @@
 \include{Features}
 \include{Installation}
 \include{QuickStart}
+\include{APIRef}
 
 \end{document}

@@ -1,0 +1,184 @@
+\section{API Reference}
+\subsection{Preprocessor constants}
+
+\newcolumntype{b}{>{\hsize=.66\hsize}X}
+\newcolumntype{s}{>{\hsize=.33\hsize}X}
+
+\newcommand{\tblx}[2]{
+	\noindent
+	\begin{tabularx}{\textwidth} { | >{\raggedright\arraybackslash}X |  }
+		\hline
+		\texttt{#1} \\
+		\hline
+		#2 \\
+		\hline
+	\end{tabularx}
+	\mbox{}\\
+
+}
+
+\newcommand{\tbly}[3]{
+	\noindent
+	\begin{tabularx}{\textwidth}{|s|b|}
+		\hline
+			#1 & \texttt{#2} \\
+		\hline
+			\multicolumn{2}{|l|}{\begin{minipage}{0.9\linewidth} #3 \end{minipage}} \\
+		\hline
+	\end{tabularx}
+	\mbox{}
+}
+
+\paragraph{Error codes}
+\mbox{}\\
+
+% DS5W_OK
+\tblx{DS5W\_OK}{The operation completed without an error}
+
+% DS5W_E_UNKNOWN
+\tblx{DS5W\_E\_UNKNOWN}{An unknown error occurred}
+
+% DS5W_E_INSUFFICIENT_BUFFER
+\tblx{DS5W\_E\_INSUFFICIENT\_BUFFER}{The user supplied buffer is to small }
+
+% DS5W_E_EXTERNAL_WINAPI
+\tblx{DS5W\_E\_EXTERNAL\_WINAPI}{An unsuspected Windows sided error occurred}
+
+% DS5W_E_INVALID_ARGS
+\tblx{DS5W\_E\_INVALID\_ARGS}{The user supplied arguments are invalid}
+
+% DS5W_E_CURRENTLY_NOT_SUPPORTED
+\tblx{DS5W\_E\_CURRENTLY\_NOT\_SUPPORTED}{This feature is currently not supported}
+
+% DS5W_E_DEVICE_REMOVED
+\tblx{DS5W\_E\_DEVICE\_REMOVED}{The device was removed unexpectedly}
+
+% DS5W_E_BT_COM
+\tblx{DS5W\_E\_BT\_COM}{Bluetooth communication error}
+
+
+
+\paragraph{Error helpers}
+\mbox{}\\
+
+% DS5W_SUCCESS(expr)
+\tblx{DS5W\_SUCCESS(expr)}{Check if the user supplied expression is an error success code}
+
+% DS5W_FAILED(expr)
+\tblx{DS5W\_FAILED(expr)}{Check if the user supplied expression is an error code}
+
+
+
+\paragraph{I/O State helpers}
+\mbox{}\\
+
+% DS5W_ISTATE_BTX_SQUARE / CROSS / CIRCLE / TRIANGLE
+\tblx{DS5W\_ISTATE\_BTX\_SQUARE}{PlayStation Square button}
+\tblx{DS5W\_ISTATE\_BTX\_CROSS}{PlayStation Cross button}
+\tblx{DS5W\_ISTATE\_BTX\_CIRCLE}{PlayStation Circle button}
+\tblx{DS5W\_ISTATE\_BTX\_TRIANGLE}{PlayStation Triangle button}
+
+% DPAD
+\tblx{DS5W\_ISTATE\_DPAD\_LEFT}{D-Pad left}
+\tblx{DS5W\_ISTATE\_DPAD\_DOWN}{D-Pad down}
+\tblx{DS5W\_ISTATE\_DPAD\_RIGHT}{D-Pad right}
+\tblx{DS5W\_ISTATE\_DPAD\_UP}{D-Pad up}
+
+% Button A
+\tblx{DS5W\_ISTATE\_BTN\_A\_LEFT\_BUMPER}{Left bumper button}
+\tblx{DS5W\_ISTATE\_BTN\_A\_RIGHT\_BUMPER}{Right bumper button}
+\tblx{DS5W\_ISTATE\_BTN\_A\_LEFT\_TRIGGER}{Left trigger binary input}
+\tblx{DS5W\_ISTATE\_BTN\_A\_RIGHT\_TRIGGER}{Right trigger binary input}
+\tblx{DS5W\_ISTATE\_BTN\_A\_SELECT}{Select / Share button}
+\tblx{DS5W\_ISTATE\_BTN\_A\_MENU}{Menu Button}
+\tblx{DS5W\_ISTATE\_BTN\_A\_LEFT\_STICK}{Left stick push button}
+\tblx{DS5W\_ISTATE\_BTN\_A\_RIGHT\_STICK}{Right stick push button}
+
+% Button B
+\tblx{DS5W\_ISTATE\_BTN\_B\_PLAYSTATION\_LOGO}{PlayStation logo button}
+\tblx{DS5W\_ISTATE\_BTN\_B\_PAD\_BUTTON}{The touch-pads integrated button}
+\tblx{DS5W\_ISTATE\_BTN\_B\_MIC\_BUTTON}{Microphone mute button}
+
+% Outstate
+\tblx{DS5W\_OSTATE\_PLAYER\_LED\_LEFT}{Left player indicator LED bit-mask}
+\tblx{DS5W\_OSTATE\_PLAYER\_LED\_MIDDLE\_LEFT}{Left middle player indicator LED bit-mask}
+\tblx{DS5W\_OSTATE\_PLAYER\_LED\_MIDDLE}{Middle player indicator LED bit-mask}
+\tblx{DS5W\_OSTATE\_PLAYER\_LED\_MIDDLE\_RIGHT}{Right middle player indicator LED bit-mask}
+\tblx{DS5W\_OSTATE\_PLAYER\_LED\_RIGHT}{Right player indicator LED bit-mask}
+
+\subsection{Types}
+\paragraph{DeviceEnumInfo} This struct contains all internal data required for the controller enumeration. You should not read or write any of the internal data directly. The struct can be freely user allocated with random data. It will be initialized by the corresponding function call, don't use it before it got initialized by the corresponding function.
+
+\paragraph{DeviceContext} This struct contains all internal data for reading and writing to the controller. You should not read or write any of the internal data directly. The struct can be freely user allocated with random data. It will be initialized by the corresponding function call, don't use it before it got initialized by the corresponding function. It is very important to free this data with the corresponding function before the application exits or memory is reused. 
+
+\paragraph{AnalogStick} This struct represent the XY position of one analog stick. Make sure to implement dead zones by yourself! \\
+
+\tbly{int8\_t}{x}{X Position (left to right) of the analog stick.} \\
+
+\tbly{int8\_t}{y}{Y Position (top to bottom) of the analog stick.} \\
+
+\paragraph{Vector3, Vec3} Represents a three component 16-Bit vector \\
+
+\tbly{int16\_t}{x}{X Component} \\
+
+\tbly{int16\_t}{y}{Y Component} \\
+
+\tbly{int16\_t}{z}{Z Component} \\
+
+\paragraph{Color} RGB 8-Bit color components. The library also provides several conversion functions to turn several color formats into 8-Bit RGB values.\\
+
+\tbly{uint8\_t}{r}{R - Red color channel}\\
+
+\tbly{uint8\_t}{g}{G - Green color channel}\\
+
+\tbly{uint8\_t}{b}{B - Blue color channel}\\
+
+\paragraph{Touch} This struct contains information about a single fingers touch position. \\
+
+\tbly{int8\_t}{x}{X Position of the finger (left to right).} \\
+
+\tbly{int8\_t}{y}{Y Position of the finger (top to bottom).} \\
+
+\paragraph{MicLed} Enum class representation the state of the microphone LED. \\
+
+\tblx{OFF}{Microphone LED is completely off}
+\tblx{ON}{Microphone LED is on}
+\tblx{PULSE}{Microphone LED is pulsing}
+
+
+\paragraph{TriggerEffectType} Enum class: feedback / effect type of the adaptive trigger.\\
+
+\tblx{NoResitance}{Adaptive trigger is disabled. Will provide no resistance.}
+\tblx{ContinuousResitance}{Adaptive trigger will provide a continuous resistance from a specific starting point.}
+\tblx{SectionResitance}{Adaptive trigger will provide a force fixed resistance on a defined section.}
+\tblx{EffectEx}{Adaptive trigger will execute an extended effect.}
+\tblx{Calibrate}{Adaptive trigger will enter an fixed function calibration program. Still experimental use only!}
+
+\paragraph{TriggerEffect}
+TODO
+
+\label{APIRef_Types_ledbr}
+\paragraph{LedBrightness} Enum class representation the brightness of the player indication LEDs.\\
+
+\tblx{LOW}{Low brightness player indication LEDs}
+\tblx{MEDIUM}{Medium brightness player indication LEDs}
+\tblx{HIGH}{High brightness player indication LEDs}
+
+\paragraph{PlayerLeds} Struct defining the player LDEs state.\\
+
+\tbly{Bitmask / uint8\_t}{bitmask}{Bitmask of the enabled player indication LEDs. Or together all enabled LEDs by using the \texttt{DS5W\_OSTATE\_PLAYER\_LED\_XXXXX} macros.}\\
+
+\tbly{bool}{playerLedFade}{Indicates weather the player LEDs should fade in when enabled.}\\
+
+\tbly{\hyperref[APIRef_Types_ledbr]{LedBrightness}}{brightness}{Brightness of the player LEDs}\\
+
+\paragraph{DS5InputState}
+TODO
+
+\paragraph{DS5OutputState}
+TODO
+
+\subsection{Functions}
+FUNCTIONS
+
+\newpage

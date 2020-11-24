@@ -60,13 +60,13 @@ void __DS5W::Input::evaluateHidInputBuffer(unsigned char* hidInBuffer, DS5W::DS5
 
 	// Evaluate touch state 1
 	UINT32 touchpad1Raw = *(UINT32*)(&hidInBuffer[0x20]);
-	ptrInputState->touchPoint1.x = (touchpad1Raw & 0xFFF00000) >> 20;
-	ptrInputState->touchPoint1.y = (touchpad1Raw & 0x000FFF00) >> 8;
+	ptrInputState->touchPoint1.y = (touchpad1Raw & 0xFFF00000) >> 20;
+	ptrInputState->touchPoint1.x = (touchpad1Raw & 0x000FFF00) >> 8;
 
 	// Evaluate touch state 2
 	UINT32 touchpad2Raw = *(UINT32*)(&hidInBuffer[0x24]);
-	ptrInputState->touchPoint2.x = (touchpad2Raw & 0xFFF00000) >> 20;
-	ptrInputState->touchPoint2.y = (touchpad2Raw & 0x000FFF00) >> 8;
+	ptrInputState->touchPoint2.y = (touchpad2Raw & 0xFFF00000) >> 20;
+	ptrInputState->touchPoint2.x = (touchpad2Raw & 0x000FFF00) >> 8;
 
 	// Evaluate headphone input
 	ptrInputState->headPhoneConnected = hidInBuffer[0x35] & 0x01;

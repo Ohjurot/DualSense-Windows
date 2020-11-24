@@ -40,7 +40,7 @@ namespace DS5W {
 	/// <param name="pointerToArray">(Optional) true: DeviceEnumInfo pointer is the pointer to an array of DeviceEnumInfo objects. false: DeviceEnumInfo pointer is a pointer to DeviceEnumInfo pointers to DeviceEnumInfo objects</param>
 	/// <param name="requiredLength">(Optional) pointer to uint witch recives the required total length</param>
 	/// <returns>DS5W Return value</returns>
-	DS5W_API DS5W_ReturnValue enumDevices(void* ptrBuffer, unsigned int inArrLength, bool pointerToArray = true, unsigned int* requiredLength = nullptr);
+	DS5W_API DS5W_ReturnValue enumDevices(void* ptrBuffer, unsigned int inArrLength, unsigned int* ptrLength, bool pointerToArray = true);
 
 	/// <summary>
 	/// Initializes a DeviceContext from its enum infos

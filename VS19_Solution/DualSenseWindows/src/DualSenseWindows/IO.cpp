@@ -23,7 +23,7 @@
 #include <SetupAPI.h>
 #include <hidsdi.h>
 
-DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrLength, bool pointerToArray, unsigned int* requiredLength) {
+DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrLength, unsigned int* requiredLength, bool pointerToArray) {
 	// Check for invalid non expected buffer
 	if (inArrLength && !ptrBuffer) {
 		inArrLength = 0;
@@ -208,9 +208,6 @@ DS5W_API DS5W_ReturnValue DS5W::initDeviceContext(DS5W::DeviceEnumInfo* ptrEnumI
 		// The usb input report is 64 Bytes long
 		reportLength = 64;
 	}
-
-	// TODO: Replace with proper memory allocation routine
-	ptrContext->_internal.hidBuffer = (unsigned char*)calloc(reportLength, sizeof(unsigned char));
 	
 	// Return OK
 	return DS5W_OK;
@@ -238,9 +235,6 @@ DS5W_API void DS5W::freeDeviceContext(DS5W::DeviceContext* ptrContext) {
 
 	// Unset string
 	ptrContext->_internal.devicePath[0] = 0x0;
-
-	//Plug that leak
-	free(ptrContext->_internal.hidBuffer);
 }
 
 DS5W_API DS5W_ReturnValue DS5W::reconnectDevice(DS5W::DeviceContext* ptrContext) {	
@@ -310,7 +304,6 @@ DS5W_API DS5W_ReturnValue DS5W::getDeviceInputState(DS5W::DeviceContext* ptrCont
 		__DS5W::Input::evaluateHidInputBuffer(&ptrContext->_internal.hidBuffer[1], ptrInputState);
 	}
 	
-
 	// Return ok
 	return DS5W_OK;
 }

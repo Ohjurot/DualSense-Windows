@@ -1,4 +1,128 @@
-\section{Quick start}
-Quick start
+\section{Quick start guide}
+In this section we will introduce you to the API step by step. You will need a DualSense controller connected via USB or Bluetooth.
+
+\subsection{Starting point}
+First start by creating the \texttt{main.cpp} file (assuming you already finished the installation steps from the former section). Include \texttt{ds5w.h} and create your main with an infinity loop inside.
+\begin{lstlisting}[language=C++,label=code0,caption={DS5W Main}]{DS5W Main}
+#include <Windows.h>
+#include <ds5w.h>
+#include <iostream>
+
+int main(int argc, char** argv){
+   
+   while(true){
+
+   }
+   
+   return 0;
+}
+\end{lstlisting}
+The library doesn't feature any global state or memory allocation, so it is not required to initialize the library. You can directly continue with the enumeration of all connected DualSense controllers.
+
+\subsection{Enumerate controllers}
+To enumerate DualSense controllers you need to supply an array of \texttt{DS5W::DeviceEnumInfo} or an array of pointers to \texttt{DS5W::DeviceEnumInfo} objects. The \texttt{DS5W::DeviceEnumInfo} object doesn't need any initializations, it will be initialized by the function you will call next. The function \texttt{DS5W::enumDevices(...)} will fill the supplied array with as many controllers as are available or the array can hold. Please consider looking at the API documentation to find the best way to robustly integrate that function call into your project.\\
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language=C++,label=code1,caption={Enumerate controllers}]{Enumerate controllers}
+// ...
+int main(int argc, char** argv){
+	// Array of controller infos
+	DS5W::DeviceEnumInfo infos[16];
+	
+	// Number of controllers found
+	unsigned int controllersCount = 0;
+	
+	// Call enumerate function and switch on return value
+	switch(DS5W::enumDevices(infos, 16, &controllersCount)){
+		// The buffer was not big enough. Ignore for now
+		case DS5W_E_INSUFFICIENT_BUFFER:
+			break;
+			
+		// Any other error will terminate the application
+		default:
+			// Insert your error handling
+			return -1;
+	}
+// ...
+\end{lstlisting}
+\end{minipage}
+
+\subsection{Selecting a controller}
+In this example we will select the first controller found. To enable a controller it is required to create a \texttt{DS5W::DeviceContext} context for it. The context will be initialized by the function call \texttt{DS5W::initDeviceContext(...)}. It is required to shutdown the controller after usage by calling \\
+\texttt{DS5W::freeDeviceContext(...)}.\\
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language=C++,label=code2,caption={Controller init / shutdown}]{Controller init / shutdown}
+	// ...
+	// Check number of controllers
+	if(!controllersCount){
+		return -1;
+	}
+
+	// Context for controller
+	DS5W::DeviceContext con;
+	
+	// Init controller and close application is failed
+	if(DS5W_FAILED(DS5W::initDeviceContext(&infos[0], &con))){
+		return -1;
+	}
+	
+	// Main loop
+	while(true){
+		// ...
+	}
+	
+	// Shutdown context
+	DS5W::freeDeviceContext(&con);
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsection{Reading controller input}
+The next step is read the input from the controller. We will check here if the PlayStation logo buttons is presses. When this is the case the application will exit the infinity loop and thus will shutdown. For reading the input data the \texttt{DS5W::DS5InputState} struct is required, it will be filled by the \texttt{DS5W::getDeviceInputState(...)} method call. \\
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language=C++,label=code3,caption={Reading the input}]{Reading the input}
+while(true){
+	// Input state
+	DS5W::DS5InputState inState;
+	
+	// Retrieve data
+	if (DS5W_SUCCESS(DS5W::getDeviceInputState(&con, &inState))){
+		// Check for the Logo button
+		if(inState.buttonsB & DS5W_ISTATE_BTN_B_PLAYSTATION_LOGO){
+			// Break from while loop
+			break;
+		}
+		
+		// ...
+	}
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsection{Writing controller output}
+Writing to the controller is as simple as reading from it. It requires the struct \texttt{DS5W::DS5OutputState}, to prevent random data being sent please make sure to ZeroMemory the struct or setting every value. After setting all values you want to update, the data is written by calling the\\
+\texttt{DS5W::setDeviceOutputState(...)} function. In this example we will directly map the triggers input to the rumble motors output.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language=C++,label=code4,caption={Writing the output}]{Writing the output}
+// ...
+
+// Create struct and zero it
+DS5W::DS5OutputState outState;
+ZeroMemory(&outState, sizeof(DS5W::DS5OutputState));
+
+// Set output data
+outState.leftRumble = inState.leftTrigger;
+outState.rightRumble = inState.rightTrigger;
+
+// Send output to the controller
+DS5W::setDeviceOutputState(&con, &outState);
+
+// ...
+\end{lstlisting}
+\end{minipage}
+Putting all the above code snippets together will give you a working example application.
 
 \newpage
