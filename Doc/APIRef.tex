@@ -20,11 +20,11 @@
 \newcommand{\tbly}[3]{
 	\noindent
 	\begin{tabularx}{\textwidth}{|s|b|}
-		\hline
+		\midrule % hline
 			#1 & \texttt{#2} \\
-		\hline
-			\multicolumn{2}{|l|}{\begin{minipage}{0.9\linewidth} #3 \end{minipage}} \\
-		\hline
+		\midrule % hline
+			\multicolumn{2}{|l|}{\begin{minipage}{0.9\linewidth} \noindent #3 \end{minipage}} \\ % \rule{0pt}{2ex} \rule{0pt}{2ex} 
+		\midrule % hline
 	\end{tabularx}
 	\mbox{}
 }
@@ -111,12 +111,14 @@
 
 \paragraph{DeviceContext} This struct contains all internal data for reading and writing to the controller. You should not read or write any of the internal data directly. The struct can be freely user allocated with random data. It will be initialized by the corresponding function call, don't use it before it got initialized by the corresponding function. It is very important to free this data with the corresponding function before the application exits or memory is reused. 
 
+\label{APIRef_Types_analstick}
 \paragraph{AnalogStick} This struct represent the XY position of one analog stick. Make sure to implement dead zones by yourself! \\
 
 \tbly{int8\_t}{x}{X Position (left to right) of the analog stick.} \\
 
 \tbly{int8\_t}{y}{Y Position (top to bottom) of the analog stick.} \\
 
+\label{APIRef_Types_vec3}
 \paragraph{Vector3, Vec3} Represents a three component 16-Bit vector \\
 
 \tbly{int16\_t}{x}{X Component} \\
@@ -125,6 +127,7 @@
 
 \tbly{int16\_t}{z}{Z Component} \\
 
+\label{APIRef_Types_color}
 \paragraph{Color} RGB 8-Bit color components. The library also provides several conversion functions to turn several color formats into 8-Bit RGB values.\\
 
 \tbly{uint8\_t}{r}{R - Red color channel}\\
@@ -133,12 +136,14 @@
 
 \tbly{uint8\_t}{b}{B - Blue color channel}\\
 
+\label{APIRef_Types_touch}
 \paragraph{Touch} This struct contains information about a single fingers touch position. \\
 
 \tbly{int8\_t}{x}{X Position of the finger (left to right).} \\
 
 \tbly{int8\_t}{y}{Y Position of the finger (top to bottom).} \\
 
+\label{APIRef_Types_micled}
 \paragraph{MicLed} Enum class representation the state of the microphone LED. \\
 
 \tblx{OFF}{Microphone LED is completely off}
@@ -146,6 +151,7 @@
 \tblx{PULSE}{Microphone LED is pulsing}
 
 
+\label{APIRef_Types_tfxt}
 \paragraph{TriggerEffectType} Enum class: feedback / effect type of the adaptive trigger.\\
 
 \tblx{NoResitance}{Adaptive trigger is disabled. Will provide no resistance.}
@@ -154,8 +160,43 @@
 \tblx{EffectEx}{Adaptive trigger will execute an extended effect.}
 \tblx{Calibrate}{Adaptive trigger will enter an fixed function calibration program. Still experimental use only!}
 
+\label{APIRef_Types_trigfx}
 \paragraph{TriggerEffect}
-TODO
+This struct represents an adaptive trigger effect. The first param is the type. The other is a union over structs for each type.\\
+
+\tbly{\hyperref[APIRef_Types_tfxt]{TriggerEffectType}}{effectType}{Type of the effect. Chose next data according to this parameter.}\\
+
+\noindent
+When \texttt{effectType} == \texttt{NoResitance} no parameter needs to be set!\\
+When \texttt{effectType} == \texttt{Calibrate} no parameter needs to be set!\\
+When \texttt{effectType} == \texttt{ContinuousResitance}:\\
+
+\tbly{uint8\_t}{Continuous.startPosition}{Start position of the continuous force.}\\
+
+\tbly{uint8\_t}{Continuous.endPosition}{Force applied.}\\
+
+\noindent
+When \texttt{effectType} == \texttt{SectionResitance}:\\
+
+\tbly{uint8\_t}{Section.startPosition}{Start of force increased area.}\\
+
+\tbly{uint8\_t}{Section.force}{End of force increased area.}\\
+
+\noindent
+When \texttt{effectType} == \texttt{EffectEx}:\\
+
+\tbly{uint8\_t}{EffectEx.startPosition}{Start positions of the effect.}\\
+
+\tbly{bool}{EffectEx.keepEffect}{Indicates weather the effect should keep playing (vibration) when the trigger is fully pressed.}\\
+
+\tbly{uint8\_t}{EffectEx.beginForce}{Force for the section with trigger value >= 128.}\\
+
+\tbly{uint8\_t}{EffectEx.middleForce}{Force for the section with trigger value <= 128.}\\
+
+\tbly{uint8\_t}{EffectEx.endForce}{Force applied when the trigger is fully pressed / would go beyond 255.}\\
+
+\tbly{uint8\_t}{EffectEx.frequency}{Frequency with witch the effect is executed. More a scalar value to scale between two fixed frequency than an read frequency parameter,}\\
+
 
 \label{APIRef_Types_ledbr}
 \paragraph{LedBrightness} Enum class representation the brightness of the player indication LEDs.\\
@@ -164,6 +205,7 @@ TODO
 \tblx{MEDIUM}{Medium brightness player indication LEDs}
 \tblx{HIGH}{High brightness player indication LEDs}
 
+\label{APIRef_Types_pleds}
 \paragraph{PlayerLeds} Struct defining the player LDEs state.\\
 
 \tbly{Bitmask / uint8\_t}{bitmask}{Bitmask of the enabled player indication LEDs. Or together all enabled LEDs by using the \texttt{DS5W\_OSTATE\_PLAYER\_LED\_XXXXX} macros.}\\
@@ -172,13 +214,89 @@ TODO
 
 \tbly{\hyperref[APIRef_Types_ledbr]{LedBrightness}}{brightness}{Brightness of the player LEDs}\\
 
-\paragraph{DS5InputState}
-TODO
+
+\paragraph{DS5InputState} 
+This struct represents the input state of a DualSense controller. It is used to read all input data.\\
+
+\tbly{\hyperref[APIRef_Types_analstick]{AnalogStick}}{leftStick}{Represents the position of the left analog stick.}\\
+
+\tbly{\hyperref[APIRef_Types_analstick]{AnalogStick}}{rightStick}{Represents the position of the right analog stick.}\\
+
+\tbly{uint8\_t}{leftTrigger}{8-Bit position of the left trigger. No dead zones required!}\\
+
+\tbly{uint8\_t}{rightTrigger}{8-Bit position of the right trigger. No dead zones required!}\\
+
+\tbly{Bitmask / uint8\_t}{buttonsAndDpad}{Bitmask of the PlayStation button and the DPAD. Check the active state with the \texttt{DS5W\_ISTATE\_BTX\_XXXXX} and \texttt{DS5W\_ISTATE\_DPAD\_XXXXX} macros.}\\
+
+\tbly{Bitmask / uint8\_t}{buttonsA}{Bitmask of the controllers buttons (Set A). Check the active state with the \texttt{DS5W\_ISTATE\_BTN\_A\_XXXXX} macros.}\\
+
+\tbly{Bitmask / uint8\_t}{buttonsB}{Bitmask of the controllers buttons (Set B). Check the active state with the \texttt{DS5W\_ISTATE\_BTN\_B\_XXXXX} macros.}\\
+
+\tbly{\hyperref[APIRef_Types_vec3]{Vector3}}{accelerometer}{Acceleration vector.}\\
+
+\tbly{\hyperref[APIRef_Types_vec3]{Vector3}}{gyroscope}{Orientation vector.}\\
+
+\tbly{\hyperref[APIRef_Types_touch]{Touch}}{touchPoint1}{First touch point.}\\
+
+\tbly{\hyperref[APIRef_Types_touch]{Touch}}{touchPoint2}{Second touch point.}\\
+
+\tbly{bool}{headPhoneConnected}{Indicates weather a plug is present in the headphone jack. Will also trigger on an extension cord with no headphone connected!}\\
+
+\tbly{uint8\_t}{leftTriggerFeedback}{Indicates the pressing force when the left adaptive trigger is active.}\\
+
+\tbly{uint8\_t}{rightTriggerFeedback}{Indicates the pressing force when the right adaptive trigger is active.}\\
+
 
 \paragraph{DS5OutputState}
-TODO
+This struct represents the output state of a DualSense controller. It is used to set all output data. \\
+
+\tbly{uint8\_t}{leftRumble}{Force of the left (hard) rumble motor.}\\
+
+\tbly{uint8\_t}{rightRumble}{Force of the right (soft) rumble motor.}\\
+
+\tbly{\hyperref[APIRef_Types_micled]{MicLed}}{microphoneLed2}{State of the microphone LED.}\\
+
+\tbly{bool}{disableLeds}{When active the lightbar will be set to the default PS5 blue.}\\
+
+\tbly{\hyperref[APIRef_Types_pleds]{PlayerLeds}}{playerLeds}{State of the player LEDs.}\\
+
+\tbly{\hyperref[APIRef_Types_color]{Color}}{lightbar}{RGB Color of the lightbar. No affect when \texttt{disableLeds} is \texttt{true}}\\
+
+\tbly{\hyperref[APIRef_Types_trigfx]{TriggerEffect}}{leftTriggerEffect}{Effect of the left adaptive trigger.}\\
+
+\tbly{\hyperref[APIRef_Types_trigfx]{TriggerEffect}}{rightTriggerEffect}{Effect of the right adaptive trigger.}
+\newpage
 
 \subsection{Functions}
-FUNCTIONS
+
+\paragraph{DS5W::enumDevices(...)}
+TODO
+
+\paragraph{DS5W::initDeviceContext(...)}
+TODO
+
+\paragraph{DS5W::freeDeviceContext(...)}
+TODO
+
+\paragraph{DS5W::reconnectDevice(...)}
+TODO
+
+\paragraph{DS5W::getDeviceInputState(...)}
+TODO
+
+\paragraph{DS5W::setDeviceOutputState(...)}
+TODO
+
+\paragraph{DS5W::color\_R32G32B32\_FLOAT(...)}
+TODO
+
+\paragraph{DS5W::color\_R32G32B32A32\_FLOAT(...)}
+TODO
+
+\paragraph{DS5W::color\_R8G8B8A8\_UCHAR(...)}
+TODO
+
+\paragraph{DS5W::color\_R8G8B8\_UCHAR\_A32\_FLOAT(...)}
+TODO
 
 \newpage

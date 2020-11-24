@@ -20,7 +20,7 @@ namespace DS5W {
 	/// <param name="g">Green channel</param>
 	/// <param name="b">Blue channel</param>
 	/// <returns>DS5W::Color</returns>
-	DS5W_API DS5W::Color color_R32G32B32_UNORM(float r, float g, float b);
+	DS5W_API DS5W::Color color_R32G32B32_FLOAT(float r, float g, float b);
 	
 	/// <summary>
 	/// Convert from 4-Color RGBA normalized  float to DS5W::Color
@@ -30,7 +30,7 @@ namespace DS5W {
 	/// <param name="b">Blue channel</param>
 	/// <param name="a">Alpha channel</param>
 	/// <returns>DS5W::Color</returns>
-	DS5W_API DS5W::Color color_R32G32B32A32_UNORM(float r, float g, float b, float a);
+	DS5W_API DS5W::Color color_R32G32B32A32_FLOAT(float r, float g, float b, float a);
 
 	/// <summary>
 	/// Convert from 4-Color RGBA byte / UChar to DS5W::Color
@@ -50,5 +50,5 @@ namespace DS5W {
 	/// <param name="b">Blue channel</param>
 	/// <param name="a">Alpha channel</param>
 	/// <returns>DS5W::Color</returns>
-	DS5W_API DS5W::Color color_R8G8B8_UCHAR_A32_UNORM(unsigned char r, unsigned char g, unsigned char b, float a);
+	DS5W_API DS5W::Color color_R8G8B8_UCHAR_A32_FLOAT(unsigned char r, unsigned char g, unsigned char b, float a);
 }
