@@ -270,33 +270,44 @@ This struct represents the output state of a DualSense controller. It is used to
 \subsection{Functions}
 
 \paragraph{DS5W::enumDevices(...)}
-TODO
+Enumerate all connected controllers.\\
+
 
 \paragraph{DS5W::initDeviceContext(...)}
-TODO
+Initializes the context for a specific controller.\\
+
 
 \paragraph{DS5W::freeDeviceContext(...)}
-TODO
+Frees a context from a controller witch is no longer required.\\
+
 
 \paragraph{DS5W::reconnectDevice(...)}
-TODO
+Trys to reconnect a removed device.\\
+
 
 \paragraph{DS5W::getDeviceInputState(...)}
-TODO
+Retrieve the current input state of the device.\\
+
 
 \paragraph{DS5W::setDeviceOutputState(...)}
-TODO
+Sets the desired output state of the device.\\
 
-\paragraph{DS5W::color\_R32G32B32\_FLOAT(...)}
-TODO
+
+\paragraph{DS5W::color\_R32G32B32\_FLOAT(...)} 
+Converts a three component (RGB) normalized float color to the internal RGB 8-Bit formate.\\
+
 
 \paragraph{DS5W::color\_R32G32B32A32\_FLOAT(...)}
-TODO
+Converts a four component (RGBA) normalized float color to the internal RGB 8-Bit formate.\\
+
 
 \paragraph{DS5W::color\_R8G8B8A8\_UCHAR(...)}
-TODO
+Converts a four component (RGBA) unsigned char color (8-Bit) to the internal RGB 8-Bit formate.\\
+
 
 \paragraph{DS5W::color\_R8G8B8\_UCHAR\_A32\_FLOAT(...)}
-TODO
+Scales a three component (RGB) unsigned char color (8-Bit) by a normalized float (A).\\
+
+
 
 \newpage
