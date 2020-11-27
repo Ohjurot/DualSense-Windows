@@ -1,5 +1,11 @@
 MIT License
 
+----------------------------------- Info -----------------------------------
+Only the implementation is licensed by the MIT license. The protocol of the 
+DualSense 5 controller has been discovered independently and collectively by
+several people. You can find my sources in the GitHub repository.
+----------------------------------------------------------------------------
+
 Copyright (c) 2020 Ludwig Füchsl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -156,7 +156,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				outState.rightRumble = (rrmbl & 0xFF00) >> 8UL;
 
 				// Lightbar
-				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(255, 0, 0, intensity);
+				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_FLOAT(255, 0, 0, intensity);
 				intensity -= 0.0025f / btMul;
 				if (intensity <= 0.0f) {
 					intensity = 1.0f;

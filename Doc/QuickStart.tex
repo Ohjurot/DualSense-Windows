@@ -34,6 +34,7 @@ int main(int argc, char** argv){
 	
 	// Call enumerate function and switch on return value
 	switch(DS5W::enumDevices(infos, 16, &controllersCount)){
+		case DS5W_OK:
 		// The buffer was not big enough. Ignore for now
 		case DS5W_E_INSUFFICIENT_BUFFER:
 			break;
