@@ -15,7 +15,7 @@ Windows API for the PS5 DualSense controller.  Written in C++ for C++. This API 
 - Reading the Accelerometer and Gyroscope
 - Using the haptic feedback for default rumbleing 
 - Controlling the adaptive triggers (3 Types of effects) and reading back the users force while active
-- Controlling the RGB color of the lighbar
+- Controlling the RGB color of the lightbar
 - Setting the player indication LEDs and the microphone LED
 
 The library is still in active development and will be extended with additional features soon. Consider checking out our [Road-map](https://github.com/Ohjurot/DualSense-Windows/blob/main/ROADMAP.md) for further information.
