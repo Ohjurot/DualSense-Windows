@@ -26,7 +26,7 @@ The library is still in active development and will be extended with additional 
 2. Unzip the archive to your computer
 3. Read the `DualSenseWindows.pdf`  PDF documentation to get the specific information for your current release
 
-If you don't want to mess your time documentation - this is the minimal example on how to use the library:
+If you don't want to waste time reading the documentation - this is the minimal example on how to use the library:
 
 ```c++
 #include <Windows.h>
