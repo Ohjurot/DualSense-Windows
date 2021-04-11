@@ -94,7 +94,7 @@ namespace DS5W {
 		/// <summary>
 		/// 7-bit ID for touch
 		/// </summary>
-		uint8_t id;
+		unsigned char id;
 	} Touch;
 
 	typedef struct _Battery {
