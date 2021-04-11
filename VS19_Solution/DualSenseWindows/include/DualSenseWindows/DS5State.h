@@ -85,6 +85,16 @@ namespace DS5W {
 		/// Y position of finger (~ 0 - 2048)
 		/// </summary>
 		unsigned int y;
+
+		/// <summary>
+		/// Touch is down
+		/// </summary>
+		bool down;
+
+		/// <summary>
+		/// 7-bit ID for touch
+		/// </summary>
+		uint8_t id;
 	} Touch;
 
 	typedef struct _Battery {
