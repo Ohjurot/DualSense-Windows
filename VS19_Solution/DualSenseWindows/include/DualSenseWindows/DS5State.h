@@ -1,14 +1,17 @@
 /*
-	DS5State.h is part of DualSenseWindows
-	https://github.com/Ohjurot/DualSense-Windows
+    DS5State.h is part of DualSenseWindows
+    https://github.com/Ohjurot/DualSense-Windows
 
-	Contributors of this file:
-	11.2020 Ludwig Füchsl
+    Contributors of this file:
+    11.2020 Ludwig FÃ¼chsl
 
-	Licensed under the MIT License (To be found in repository root directory)
+    Licensed under the MIT License (To be found in repository root directory)
 */
 #pragma once
 
+#include <cstdint>
+
+// Button and D-pad bitmasks
 #define DS5W_ISTATE_BTX_SQUARE 0x10
 #define DS5W_ISTATE_BTX_CROSS 0x20
 #define DS5W_ISTATE_BTX_CIRCLE 0x40
@@ -18,6 +21,7 @@
 #define DS5W_ISTATE_DPAD_RIGHT 0x04
 #define DS5W_ISTATE_DPAD_UP 0x08
 
+// Button A bitmasks
 #define DS5W_ISTATE_BTN_A_LEFT_BUMPER 0x01
 #define DS5W_ISTATE_BTN_A_RIGHT_BUMPER 0x02
 #define DS5W_ISTATE_BTN_A_LEFT_TRIGGER 0x04
@@ -27,10 +31,12 @@
 #define DS5W_ISTATE_BTN_A_LEFT_STICK 0x40
 #define DS5W_ISTATE_BTN_A_RIGHT_STICK 0x80
 
+// Button B bitmasks
 #define DS5W_ISTATE_BTN_B_PLAYSTATION_LOGO 0x01
 #define DS5W_ISTATE_BTN_B_PAD_BUTTON 0x02
 #define DS5W_ISTATE_BTN_B_MIC_BUTTON 0x04
 
+// Player LED bitmasks
 #define DS5W_OSTATE_PLAYER_LED_LEFT 0x01
 #define DS5W_OSTATE_PLAYER_LED_MIDDLE_LEFT 0x02
 #define DS5W_OSTATE_PLAYER_LED_MIDDLE 0x04
@@ -39,386 +45,114 @@
 
 namespace DS5W {
 
-	/// <summary>
-	/// Analog stick
-	/// </summary>
-	typedef struct _AnalogStick {
-		/// <summary>
-		/// X Position of stick (0 = Center)
-		/// </summary>
-		char x;
+    struct AnalogStick {
+        int8_t x;  // X Position of stick (0 = Center)
+        int8_t y;  // Y Position of stick (0 = Center)
+    };
 
-		/// <summary>
-		/// Y Posistion of stick (0 = Center)
-		/// </summary>
-		char y;
-	} AnalogStick;
+    struct Vector3 {
+        int16_t x;
+        int16_t y;
+        int16_t z;
+    };
 
-	/// <summary>
-	/// 3 Component vector
-	/// </summary>
-	typedef struct _Vec3 {
-		short x;
-		short y;
-		short z;
-	} Vector3, Vec3;
+    struct Color {
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+    };
 
-	/// <summary>
-	/// RGB Color
-	/// </summary>
-	typedef struct _Color {
-		unsigned char r;
-		unsigned char g;
-		unsigned char b;
-	} Color;
+    struct Touch {
+        uint32_t x;       // X position of finger (~ 0 - 2000)
+        uint32_t y;       // Y position of finger (~ 0 - 2048)
+        bool down;        // Touch is down
+        uint8_t id;       // 7-bit ID for touch
+    };
 
-	/// <summary>
-	/// Touchpad state
-	/// </summary>
-	typedef struct _Touch {
-		/// <summary>
-		/// X positon of finger (~ 0 - 2000)
-		/// </summary>
-		unsigned int x;
+    struct Battery {
+        bool charging;
+        bool fullyCharged;
+        uint8_t level;    // Battery charge level 0x0 to 0xA
+    };
 
-		/// <summary>
-		/// Y position of finger (~ 0 - 2048)
-		/// </summary>
-		unsigned int y;
+    enum class MicLed : uint8_t {
+        OFF = 0x00,
+        ON = 0x01,
+        PULSE = 0x02,
+    };
 
-		/// <summary>
-		/// Touch is down
-		/// </summary>
-		bool down;
+    enum class TriggerEffectType : uint8_t {
+        NoResistance = 0x00,
+        ContinuousResistance = 0x01,
+        SectionResistance = 0x02,
+        EffectEx = 0x26,
+        Calibrate = 0xFC,
+    };
 
-		/// <summary>
-		/// 7-bit ID for touch
-		/// </summary>
-		unsigned char id;
-	} Touch;
+    struct TriggerEffect {
+        TriggerEffectType effectType;
+        union {
+            uint8_t _u1_raw[6];
+            struct {
+                uint8_t startPosition;
+                uint8_t force;
+                uint8_t _pad[4];
+            } Continuous;
+            struct {
+                uint8_t startPosition;
+                uint8_t endPosition;
+                uint8_t _pad[4];
+            } Section;
+            struct {
+                uint8_t startPosition;
+                bool keepEffect;
+                uint8_t beginForce;
+                uint8_t middleForce;
+                uint8_t endForce;
+                uint8_t frequency;
+            } EffectEx;
+        };
+    };
 
-	typedef struct _Battery {
-		/// <summary>
-		/// Charching state of the battery
-		/// </summary>
-		bool chargin;
+    enum class LedBrightness : uint8_t {
+        LOW = 0x02,
+        MEDIUM = 0x01,
+        HIGH = 0x00,
+    };
 
-		/// <summary>
-		/// Indicates that the battery is fully charged
-		/// </summary>
-		bool fullyCharged;
+    struct PlayerLeds {
+        uint8_t bitmask;
+        bool playerLedFade;
+        LedBrightness brightness;
+    };
 
-		/// <summary>
-		/// Battery charge level 0x0 to 
-		/// </summary>
-		unsigned char level;
-	}Battery;
+    struct DS5InputState {
+        AnalogStick leftStick;
+        AnalogStick rightStick;
+        uint8_t leftTrigger;
+        uint8_t rightTrigger;
+        uint8_t buttonsAndDpad;
+        uint8_t buttonsA;
+        uint8_t buttonsB;
+        Vector3 accelerometer;
+        Vector3 gyroscope;
+        Touch touchPoint1;
+        Touch touchPoint2;
+        Battery battery;
+        bool headPhoneConnected;
+        uint8_t leftTriggerFeedback;
+        uint8_t rightTriggerFeedback;
+    };
 
-	/// <summary>
-	/// State of the mic led
-	/// </summary>
-	typedef enum class _MicLed : unsigned char{
-		/// <summary>
-		/// Lef is off
-		/// </summary>
-		OFF = 0x00,
+    struct DS5OutputState {
+        uint8_t leftRumble;
+        uint8_t rightRumble;
+        MicLed microphoneLed;
+        bool disableLeds;
+        PlayerLeds playerLeds;
+        Color lightbar;
+        TriggerEffect leftTriggerEffect;
+        TriggerEffect rightTriggerEffect;
+    };
 
-		/// <summary>
-		/// Led is on
-		/// </summary>
-		ON = 0x01,
-
-		/// <summary>
-		/// Led is pulsing
-		/// </summary>
-		PULSE = 0x02,
-	} MicLed;
-
-	/// <summary>
-	/// Type of trigger effect
-	/// </summary>
-	typedef enum class _TriggerEffectType : unsigned char {
-		/// <summary>
-		/// No resistance is applied
-		/// </summary>
-		NoResitance = 0x00,
-
-		/// <summary>
-		/// Continuous Resitance is applied
-		/// </summary>
-		ContinuousResitance = 0x01,
-
-		/// <summary>
-		/// Seciton resistance is appleyed
-		/// </summary>
-		SectionResitance = 0x02,
-
-		/// <summary>
-		/// Extended trigger effect
-		/// </summary>
-		EffectEx = 0x26,
-
-		/// <summary>
-		/// Calibrate triggers
-		/// </summary>
-		Calibrate = 0xFC,
-	} TriggerEffectType;
-
-	/// <summary>
-	/// Trigger effect
-	/// </summary>
-	typedef struct _TriggerEffect {
-		/// <summary>
-		/// Trigger effect type
-		/// </summary>
-		TriggerEffectType effectType;
-
-		/// <summary>
-		/// Union for effect parameters
-		/// </summary>
-		union {
-			/// <summary>
-			/// Union one raw data
-			/// </summary>
-			unsigned char _u1_raw[6];
-
-			/// <summary>
-			/// For type == ContinuousResitance
-			/// </summary>
-			struct {
-				/// <summary>
-				/// Start position of resistance
-				/// </summary>
-				unsigned char startPosition;
-
-				/// <summary>
-				/// Force of resistance
-				/// </summary>
-				unsigned char force;
-
-				/// <summary>
-				/// PAD / UNUSED
-				/// </summary>
-				unsigned char _pad[4];
-			} Continuous;
-
-			/// <summary>
-			/// For type == SectionResitance
-			/// </summary>
-			struct {
-				/// <summary>
-				/// Start position of resistance
-				/// </summary>
-				unsigned char startPosition;
-
-				/// <summary>
-				/// End position of resistance (>= start)
-				/// </summary>
-				unsigned char endPosition;
-				
-				/// <summary>
-				/// PAD / UNUSED
-				/// </summary>
-				unsigned char _pad[4];
-			} Section;
-
-			/// <summary>
-			/// For type == EffectEx
-			/// </summary>
-			struct {
-				/// <summary>
-				/// Position at witch the effect starts
-				/// </summary>
-				unsigned char startPosition;
-
-				/// <summary>
-				/// Wher the effect should keep playing when trigger goes beyond 255
-				/// </summary>
-				bool keepEffect;
-
-				/// <summary>
-				/// Force applied when trigger >= (255 / 2)
-				/// </summary>
-				unsigned char beginForce;
-
-				/// <summary>
-				/// Force applied when trigger <= (255 / 2)
-				/// </summary>
-				unsigned char middleForce;
-
-				/// <summary>
-				/// Force applied when trigger is beyond 255
-				/// </summary>
-				unsigned char endForce;
-
-				/// <summary>
-				/// Vibration frequency of the trigger
-				/// </summary>
-				unsigned char frequency;
-			} EffectEx;
-		};
-	} TriggerEffect;
-
-	/// <summary>
-	/// Led brightness
-	/// </summary>
-	typedef enum _LedBrightness : unsigned char {
-		/// <summary>
-		/// Low led brightness
-		/// </summary>
-		LOW = 0x02,
-
-		/// <summary>
-		/// Medium led brightness
-		/// </summary>
-		MEDIUM = 0x01,
-
-		/// <summary>
-		/// High led brightness
-		/// </summary>
-		HIGH = 0x00,
-	} LedBrightness;
-
-	/// <summary>
-	/// Player leds values
-	/// </summary>
-	typedef struct _PlayerLeds {
-		/// <summary>
-		/// Player indication leds bitflag (You may used them for other features) DS5W_OSTATE_PLAYER_LED_???
-		/// </summary>
-		unsigned char bitmask;
-
-		/// <summary>
-		/// Indicates weather the player leds should fade in
-		/// </summary>
-		bool playerLedFade;
-
-		/// <summary>
-		/// Brightness of the player leds
-		/// </summary>
-		LedBrightness brightness;
-	} PlayerLeds;
-
-	/// <summary>
-	/// Input state of the controler
-	/// </summary>
-	typedef struct _DS5InputState {
-		/// <summary>
-		/// Position of left stick
-		/// </summary>
-		AnalogStick leftStick;
-
-		/// <summary>
-		/// Posisiton of right stick
-		/// </summary>
-		AnalogStick rightStick;
-
-		/// <summary>
-		/// Left trigger position
-		/// </summary>
-		unsigned char leftTrigger;
-
-		/// <summary>
-		/// Right trigger position
-		/// </summary>
-		unsigned char rightTrigger;
-
-		/// <summary>
-		/// Buttons and dpad bitmask DS5W_ISTATE_BTX_?? and DS5W_ISTATE_DPAD_?? indices check with if(buttonsAndDpad & DS5W_ISTATE_DPAD_??)...
-		/// </summary>
-		unsigned char buttonsAndDpad;
-
-		/// <summary>
-		/// Button bitmask A (DS5W_ISTATE_BTN_A_??)
-		/// </summary>
-		unsigned char buttonsA;
-
-		/// <summary>
-		/// Button bitmask B (DS5W_ISTATE_BTN_B_??)
-		/// </summary>
-		unsigned char buttonsB;
-
-		/// <summary>
-		/// Accelerometer
-		/// </summary>
-		Vector3 accelerometer;
-
-		/// <summary>
-		/// Gyroscope  (Currently only raw values will be dispayed! Probably needs calibration (Will be done within the lib in the future))
-		/// </summary>
-		Vector3 gyroscope;
-
-		/// <summary>
-		/// First touch point
-		/// </summary>
-		Touch touchPoint1;
-
-		/// <summary>
-		/// Second touch point
-		/// </summary>
-		Touch touchPoint2;
-
-		/// <summary>
-		/// Battery information
-		/// </summary>
-		Battery battery;
-
-		/// <summary>
-		/// Indicates the connection of headphone
-		/// </summary>
-		bool headPhoneConnected;
-
-		/// <summary>
-		/// EXPERIMAENTAL: Feedback of the left adaptive trigger (only when trigger effect is active)
-		/// </summary>
-		unsigned char leftTriggerFeedback;
-
-		/// <summary>
-		/// EXPERIMAENTAL: Feedback of the right adaptive trigger (only when trigger effect is active)
-		/// </summary>
-		unsigned char rightTriggerFeedback;
-	} DS5InputState;
-
-	typedef struct _DS5OutputState {
-		/// <summary>
-		/// Left / Hard rumbel motor
-		/// </summary>
-		unsigned char leftRumble;
-
-		/// <summary>
-		/// Right / Soft rumbel motor
-		/// </summary>
-		unsigned char rightRumble;
-
-		/// <summary>
-		/// State of the microphone led
-		/// </summary>
-		MicLed microphoneLed;
-
-		/// <summary>
-		/// Diables all leds
-		/// </summary>
-		bool disableLeds;
-
-		/// <summary>
-		/// Player leds
-		/// </summary>
-		PlayerLeds playerLeds;
-
-		/// <summary>
-		/// Color of the lightbar
-		/// </summary>
-		Color lightbar;
-
-		/// <summary>
-		/// Effect of left trigger
-		/// </summary>
-		TriggerEffect leftTriggerEffect;
-
-		/// <summary>
-		/// Effect of right trigger
-		/// </summary>
-		TriggerEffect rightTriggerEffect;
-
-	} DS5OutputState;
-}
+} // namespace DS5W
