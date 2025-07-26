@@ -6,6 +6,7 @@
 #include <DualSenseWindows/IO.h>
 #include <DualSenseWindows/Device.h>
 #include <DualSenseWindows/Helpers.h>
+#include <iostream>
 
 typedef std::wstringstream wstrBuilder;
 
@@ -152,6 +153,10 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				lrmbl = max(lrmbl - 0x200 / btMul, 0);
 				rrmbl = max(rrmbl - 0x100 / btMul, 0);
 
+				outState.rumble.Mode = static_cast<unsigned char>(DS5W::RumbleMode::AdvancedRumble);
+				outState.rumble.Feature = static_cast<unsigned char>(DS5W::FeatureMode::Advanced);
+				outState.rumble.SoftRumbleReduce = 0x10;
+
 				outState.leftRumble = (lrmbl & 0xFF00) >> 8UL;
 				outState.rightRumble = (rrmbl & 0xFF00) >> 8UL;
 
@@ -198,7 +203,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				// Right trigger is forcy
 				outState.rightTriggerEffect.effectType = rType;
 				outState.rightTriggerEffect.Continuous.force = 0xFF;
-				outState.rightTriggerEffect.Continuous.startPosition = 0x00;				
+				outState.rightTriggerEffect.Continuous.startPosition = 0x00;
 
 				DS5W::setDeviceOutputState(&con, &outState);
 			}

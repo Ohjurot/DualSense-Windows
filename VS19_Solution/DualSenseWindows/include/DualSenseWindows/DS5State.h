@@ -3,7 +3,7 @@
 	https://github.com/Ohjurot/DualSense-Windows
 
 	Contributors of this file:
-	11.2020 Ludwig F�chsl
+	11.2020 Ludwig Füchsl
 
 	Licensed under the MIT License (To be found in repository root directory)
 */
@@ -77,7 +77,86 @@ namespace DS5W {
 		unsigned char g;
 		unsigned char b;
 	} Color;
+	
+	typedef enum class _AudioMode : unsigned char{
+		/// <summary>
+		/// Enable Audio Headset
+		/// </summary>
+		Headset = 0x05,
+		
+		/// <summary>
+		/// Enable Audio Speaker
+		/// </summary>
+		Speaker = 0x31,
 
+		/// <summary>
+		/// Enable Audio Headset And Speaker
+		/// </summary>
+		HeadsetAndSpeaker = 0x21,
+	} AudioMode;
+
+	typedef enum class _MicMode : unsigned char{
+		/// <summary>
+		/// Enable Audio Speaker
+		/// </summary>
+		On = 0x00,
+
+		/// <summary>
+		/// Mute Mic
+		/// </summary>
+		Mute = 0x10,
+	} MicMode;
+	
+	/// <summary>
+	/// Audio Settings
+	/// </summary>
+	typedef struct _AudioConfig {
+		unsigned char Mode = static_cast<unsigned char>(AudioMode::Speaker);
+		unsigned char HeadsetVolume = 0x7C;
+		unsigned char SpeakerVolume = 0x7C;
+		unsigned char MicVolume = 0x7C;
+		unsigned char MicStatus = static_cast<unsigned char>(MicMode::On);
+	} AudioConfig;
+
+	/// <summary>
+	/// Rumble Mode
+	/// </summary>
+	typedef enum class _RumbleMode : unsigned char{
+		/// <summary>
+		/// Default Rumble
+		/// </summary>
+		DefaultRumble = 0xFF,
+
+		/// <summary>
+		/// Soft Rumble
+		/// </summary>
+		AdvancedRumble = 0xFC,
+	} RumbleMode;
+
+	/// <summary>
+	/// Feature Mode
+	/// </summary>
+	typedef enum class _FeatureMode : unsigned char{
+		/// <summary>
+		/// All Feature Mode
+		/// </summary>
+		All = 0xF7,
+
+		/// <summary>
+		/// Feature Advanced DualSense Vibrations 
+		/// </summary>
+		Advanced = 0x57,
+	} FeatureMode;
+	
+	/// <summary>
+	/// Rumble Settings
+	/// </summary>
+	typedef struct _RumbleConfig {
+		unsigned char Mode = static_cast<unsigned char>(RumbleMode::DefaultRumble);
+		unsigned char Feature = static_cast<unsigned char>(FeatureMode::All);
+		unsigned char SoftRumbleReduce = 0x00;
+	} RumbleConfig;
+	
 	/// <summary>
 	/// Touchpad state
 	/// </summary>
@@ -387,6 +466,11 @@ namespace DS5W {
 
 	typedef struct _DS5OutputState {
 		/// <summary>
+		/// Rumble Config
+		/// </summary>
+		RumbleConfig rumble;
+		
+		/// <summary>
 		/// Left / Hard rumbel motor
 		/// </summary>
 		unsigned char leftRumble;
@@ -396,6 +480,11 @@ namespace DS5W {
 		/// </summary>
 		unsigned char rightRumble;
 
+		/// <summary>
+		/// Audio Config
+		/// </summary>
+		AudioConfig audio;
+		
 		/// <summary>
 		/// State of the microphone led
 		/// </summary>
