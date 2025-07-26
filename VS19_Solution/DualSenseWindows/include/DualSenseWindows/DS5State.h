@@ -3,11 +3,17 @@
 	https://github.com/Ohjurot/DualSense-Windows
 
 	Contributors of this file:
-	11.2020 Ludwig Füchsl
+	11.2020 Ludwig Fï¿½chsl
 
 	Licensed under the MIT License (To be found in repository root directory)
 */
 #pragma once
+
+// Function Buttons DualSense Edge
+#define DS5W_ISTATE_BTN_FN1          0x10
+#define DS5W_ISTATE_BTN_FN2          0x20
+#define DS5W_ISTATE_BTN_PADDLE_LEFT  0x40
+#define DS5W_ISTATE_BTN_PADDLE_RIGHT 0x80
 
 #define DS5W_ISTATE_BTX_SQUARE 0x10
 #define DS5W_ISTATE_BTX_CROSS 0x20

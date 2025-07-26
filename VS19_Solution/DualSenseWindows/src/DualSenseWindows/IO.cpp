@@ -3,7 +3,7 @@
 	https://github.com/Ohjurot/DualSense-Windows
 
 	Contributors of this file:
-	11.2020 Ludwig Füchsl
+	11.2020 Ludwig Fï¿½chsl
 
 	Licensed under the MIT License (To be found in repository root directory)
 */
@@ -88,7 +88,7 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 				}
 
 				// Check if ids match
-				if (vendorId == 0x054C && productId == 0x0CE6) {
+				if (vendorId == 0x054C && (productId == 0x0CE6 || productId == 0x0DF2)) {
 					// Get pointer to target
 					DS5W::DeviceEnumInfo* ptrInfo = nullptr;
 					if (inputArrIndex < inArrLength) {
