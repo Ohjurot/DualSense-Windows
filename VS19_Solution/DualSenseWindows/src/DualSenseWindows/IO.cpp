@@ -88,7 +88,7 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 				}
 
 				// Check if ids match
-				if (vendorId == 0x054C && (productId == 0x0CE6 || productId == 0x0DF2)) {
+				if (vendorId == 0x054C && productId == 0x0CE6) {
 					// Get pointer to target
 					DS5W::DeviceEnumInfo* ptrInfo = nullptr;
 					if (inputArrIndex < inArrLength) {
