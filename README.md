@@ -100,6 +100,68 @@ int main(int argc, char** argv){
 }
 ```
 
+## Usage of Structs for Output State Configuration
+
+The DS5 output state configuration relies on several structs to control features such as rumble effects. When preparing the output state, you set individual struct fields to adjust controller feedback and capabilities.
+
+### Example: Configuring Rumble
+```
+outState.rumble.Mode = static_cast<unsigned char>(DS5W::RumbleMode::DefaultRumble);
+outState.rumble.Feature = static_cast<unsigned char>(DS5W::FeatureMode::Advanced);
+
+// Maximum is 0x15 (hex) = 21 (decimal)
+outState.rumble.SoftRumbleReduce = 18;
+```
+### Description
+
+- **Mode: `AdvancedRumble`**  
+  Set the `Mode` field using `DS5W::RumbleMode::AdvancedRumble` to activate advanced rumble behavior, which enables finer feedback control and integration with audio or other dynamic sources.
+
+- **Feature: `Advanced`**  
+  Set the `Feature` field to `DS5W::FeatureMode::Advanced` to utilize extended feature sets provided by the controller, such as more complex vibration profiles based on audio cues.
+
+### Description of Fields
+
+- **Mode:**  
+  Controls which audio output(s) are active.
+    - `AudioMode::Headset` – Output to the headset only
+    - `AudioMode::Speaker` – Output to the speaker only
+    - `AudioMode::HeadsetAndSpeaker` – Output to both headset and speaker
+
+- **HeadsetVolume:**  
+  Sets the volume level for the headset output. The decimal range is typically `0` (min) to `124` (max).
+
+- **SpeakerVolume:**  
+  Sets the volume level for the built-in speaker. The decimal range is typically `0` (min) to `124` (max).
+
+- **MicVolume:**  
+  Defines the microphone volume. Higher decimal values represent higher sensitivity or input levels, with `124` being maximum.
+
+- **MicStatus:**  
+  Controls the microphone state.
+    - `MicMode::On` – Microphone is enabled
+    - `MicMode::Mute` – Microphone is muted
+
+### Typical Usage Scenarios
+
+- Enable both headset and speaker output with maximum volumes and microphone muted:
+  ```cpp
+  outState.audio.Mode = static_cast<unsigned char>(AudioMode::HeadsetAndSpeaker);
+  outState.audio.HeadsetVolume = 100;
+  outState.audio.SpeakerVolume = 100;
+  outState.audio.MicVolume     = 100;
+  outState.audio.MicStatus = static_cast<unsigned char>(MicMode::Mute);
+  ```
+
+- Use only the headset output with microphone enabled:
+  ```cpp
+  outState.audio.Mode = static_cast<unsigned char>(AudioMode::Headset);
+  outState.audio.HeadsetVolume = 100;
+  outState.audio.MicStatus = static_cast<unsigned char>(MicMode::On);
+  ```
+
+Adjust these settings according to your application's requirements to provide optimal audio feedback through the controller.
+  
 ## Known issues 
 
 - When the controller being shut down while connected via Bluetooth (Holding the PS button). The lib will encounter a dead lock within `getDeviceInputState(...)` call. The function will return as soon as the controller is getting reconnected. Not encountering over USB, over USB the expected `DS5W_E_DEVICE_REMOVED` error is returned. 

@@ -22,7 +22,7 @@ namespace __DS5W {
 		/// </summary>
 		/// <param name="hidOutBuffer">HID Output buffer</param>
 		/// <param name="ptrOutputState">Pointer to state to read from</param>
-		void createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState);
+		void createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState, DS5W::DeviceConnection Connection);
 
 		/// <summary>
 		/// Process trigger

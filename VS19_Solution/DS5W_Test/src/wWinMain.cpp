@@ -6,6 +6,7 @@
 #include <DualSenseWindows/IO.h>
 #include <DualSenseWindows/Device.h>
 #include <DualSenseWindows/Helpers.h>
+#include <iostream>
 
 typedef std::wstringstream wstrBuilder;
 
@@ -109,7 +110,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 		// Force
 		DS5W::TriggerEffectType rType = DS5W::TriggerEffectType::NoResitance;
 
-		int btMul = con._internal.connection == DS5W::DeviceConnection::BT ? 10 : 1;
+		int btMul = con._internal.connection == DS5W::DeviceConnection::BT ? 10 : 5;
 
 		// Application infinity loop
 		while (!(inState.buttonsA & DS5W_ISTATE_BTN_A_LEFT_BUMPER && inState.buttonsA & DS5W_ISTATE_BTN_A_RIGHT_BUMPER)) {
@@ -142,6 +143,11 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 				builder << (inState.buttonsB & DS5W_ISTATE_BTN_B_PLAYSTATION_LOGO ? L"PLAYSTATION" : L"") << (inState.buttonsB & DS5W_ISTATE_BTN_B_MIC_BUTTON ? L"\tMIC" : L"") << std::endl;;
 
+				builder << L"Gyroscope: X:" << inState.gyroscope.x << " Y:" << inState.gyroscope.y << " Z:" << inState.gyroscope.z << std::endl << std::endl;
+				builder << L"Accelerometer: X:" << inState.accelerometer.x << " Y:" << inState.accelerometer.y << " Z:" << inState.accelerometer.z << std::endl << std::endl;
+				
+				builder << L"Gravity: " << inState.battery.level << (inState.battery.chargin ? L" Charging" : L"") << (inState.battery.fullyCharged ? L"  Fully charged" : L"") << std::endl << std::endl;
+
 				// Ommited accel and gyro
 
 				// Print to console
@@ -151,6 +157,10 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				// Rumbel
 				lrmbl = max(lrmbl - 0x200 / btMul, 0);
 				rrmbl = max(rrmbl - 0x100 / btMul, 0);
+
+				outState.rumble.Mode = static_cast<unsigned char>(DS5W::RumbleMode::DefaultRumble);
+				outState.rumble.Feature = static_cast<unsigned char>(DS5W::FeatureMode::Advanced);
+				outState.rumble.SoftRumbleReduce = 0x10;
 
 				outState.leftRumble = (lrmbl & 0xFF00) >> 8UL;
 				outState.rightRumble = (rrmbl & 0xFF00) >> 8UL;
@@ -198,7 +208,7 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				// Right trigger is forcy
 				outState.rightTriggerEffect.effectType = rType;
 				outState.rightTriggerEffect.Continuous.force = 0xFF;
-				outState.rightTriggerEffect.Continuous.startPosition = 0x00;				
+				outState.rightTriggerEffect.Continuous.startPosition = 0x00;
 
 				DS5W::setDeviceOutputState(&con, &outState);
 			}

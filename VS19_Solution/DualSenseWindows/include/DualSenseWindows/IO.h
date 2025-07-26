@@ -4,7 +4,7 @@
 
 	MIT License
 
-	Copyright (c) 2020 Ludwig Füchsl
+	Copyright (c) 2020 Ludwig FÃ¼chsl
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
