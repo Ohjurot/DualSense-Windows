@@ -8,7 +8,7 @@ void __DS5W::Output::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS
 	}
 
 	// Feature mask
-	hidOutBuffer[0x00] = bIsBluetooth ? 0xFF : ptrOutputState->rumble.Mode;
+	hidOutBuffer[0x00] = ptrOutputState->rumble.Mode;
 	hidOutBuffer[0x01] = bIsBluetooth ? 0xF7 : ptrOutputState->rumble.Feature;
 
 	// Rumbel motors
@@ -27,26 +27,9 @@ void __DS5W::Output::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS
 	// Mic led
 	hidOutBuffer[0x08] = static_cast<unsigned char>(ptrOutputState->microphoneLed);
 
-	// Config Rumble
-	if (bIsBluetooth)
-	{
-		hidOutBuffer[0x24] = 0x03;
-		hidOutBuffer[0x26] = 0x2;
-	}
-	else
-	{
-		// Advanced Vibration Based On Audio and Soft Rumble Reduce
-		hidOutBuffer[0x24] = ((2 & 0x0F) << 4) | (ptrOutputState->rumble.SoftRumbleReduce & 0x0F);
-		hidOutBuffer[0x26] = 0x53;
-		if (ptrOutputState->rumble.SoftRumbleReduce > 0)
-		{
-			hidOutBuffer[0x26] |= (1 << 2); // 0x057
-		}
-		else
-		{
-			hidOutBuffer[0x26] &= ~(0 << 2); // 0x53
-		}
-	}
+	// Advanced Vibration Soft Rumble Reduce
+	hidOutBuffer[0x24] = ((2 & 0x0F) << 4) | (ptrOutputState->rumble.SoftRumbleReduce & 0x0F);
+	hidOutBuffer[0x26] = 0x04;
 
 	// Player led
 	hidOutBuffer[0x2B] = ptrOutputState->playerLeds.bitmask;
