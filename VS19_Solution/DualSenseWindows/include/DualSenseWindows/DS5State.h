@@ -132,29 +132,14 @@ namespace DS5W {
 		/// </summary>
 		AdvancedRumble = 0xFC,
 	} RumbleMode;
-
-	/// <summary>
-	/// Feature Mode
-	/// </summary>
-	typedef enum class _FeatureMode : unsigned char{
-		/// <summary>
-		/// All Feature Mode
-		/// </summary>
-		All = 0xF7,
-
-		/// <summary>
-		/// Feature Advanced DualSense Vibrations 
-		/// </summary>
-		Advanced = 0x57,
-	} FeatureMode;
 	
 	/// <summary>
 	/// Rumble Settings
 	/// </summary>
 	typedef struct _RumbleConfig {
 		unsigned char Mode = static_cast<unsigned char>(RumbleMode::DefaultRumble);
-		unsigned char Feature = static_cast<unsigned char>(FeatureMode::All);
 		unsigned char SoftRumbleReduce = 0x00;
+		unsigned char TriggerSoftnessLevel = 0x00;
 	} RumbleConfig;
 	
 	/// <summary>
@@ -468,7 +453,7 @@ namespace DS5W {
 		/// <summary>
 		/// Rumble Config
 		/// </summary>
-		RumbleConfig rumble;
+		RumbleConfig rumbleSettings;
 		
 		/// <summary>
 		/// Left / Hard rumbel motor
