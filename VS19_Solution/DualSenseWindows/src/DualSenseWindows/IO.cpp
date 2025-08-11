@@ -3,7 +3,7 @@
 	https://github.com/Ohjurot/DualSense-Windows
 
 	Contributors of this file:
-	11.2020 Ludwig Füchsl
+	11.2020 Ludwig FÃ¼chsl
 
 	Licensed under the MIT License (To be found in repository root directory)
 */
@@ -88,7 +88,7 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 				}
 
 				// Check if ids match
-				if (vendorId == 0x054C && productId == 0x0CE6) {
+				if (vendorId == 0x054C && (productId == 0x0CE6 || productId == 0x0DF2)) {
 					// Get pointer to target
 					DS5W::DeviceEnumInfo* ptrInfo = nullptr;
 					if (inputArrIndex < inArrLength) {
@@ -322,12 +322,12 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 	// Get otuput report length
 	unsigned short outputReportLength = 0;
 	if (ptrContext->_internal.connection == DS5W::DeviceConnection::BT) {
-		// The bluetooth input report is 547 Bytes long
-		outputReportLength = 547;
+		// The bluetooth input report is 78 Bytes long
+		outputReportLength = 78;
 	}
 	else {
 		// The usb input report is 48 Bytes long
-		outputReportLength = 48;
+		outputReportLength = 74;
 	}
 
 	// Cleat all input data
@@ -339,7 +339,7 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 		// Report type
 		ptrContext->_internal.hidBuffer[0x00] = 0x31;
 		ptrContext->_internal.hidBuffer[0x01] = 0x02;
-		__DS5W::Output::createHidOutputBuffer(&ptrContext->_internal.hidBuffer[2], ptrOutputState);
+		__DS5W::Output::createHidOutputBuffer(&ptrContext->_internal.hidBuffer[2], ptrOutputState, ptrContext->_internal.connection);
 
 		// Hash
 		const UINT32 crcChecksum = __DS5W::CRC32::compute(ptrContext->_internal.hidBuffer, 74);
@@ -355,7 +355,7 @@ DS5W_API DS5W_ReturnValue DS5W::setDeviceOutputState(DS5W::DeviceContext* ptrCon
 		ptrContext->_internal.hidBuffer[0x00] = 0x02;
 
 		// Else it is USB so call its evaluator
-		__DS5W::Output::createHidOutputBuffer(&ptrContext->_internal.hidBuffer[1], ptrOutputState);
+		__DS5W::Output::createHidOutputBuffer(&ptrContext->_internal.hidBuffer[1], ptrOutputState, ptrContext->_internal.connection);
 	}
 
 	// Write to controller

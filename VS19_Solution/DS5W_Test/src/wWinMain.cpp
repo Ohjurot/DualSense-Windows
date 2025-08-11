@@ -6,6 +6,7 @@
 #include <DualSenseWindows/IO.h>
 #include <DualSenseWindows/Device.h>
 #include <DualSenseWindows/Helpers.h>
+#include <iostream>
 
 typedef std::wstringstream wstrBuilder;
 

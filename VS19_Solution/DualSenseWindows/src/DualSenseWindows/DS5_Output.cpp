@@ -1,16 +1,35 @@
 #include "DS5_Output.h"
 
-void __DS5W::Output::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState) {
+void __DS5W::Output::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS5OutputState* ptrOutputState, DS5W::DeviceConnection Connection) {
+	bool bIsBluetooth = false;
+	if (Connection == DS5W::DeviceConnection::BT)
+	{
+		bIsBluetooth = true;
+	}
+
 	// Feature mask
-	hidOutBuffer[0x00] = 0xFF;
+	hidOutBuffer[0x00] = ptrOutputState->rumbleSettings.Mode;
 	hidOutBuffer[0x01] = 0xF7;
 
 	// Rumbel motors
 	hidOutBuffer[0x02] = ptrOutputState->rightRumble;
 	hidOutBuffer[0x03] = ptrOutputState->leftRumble;
 
+	// Audio
+	if (!bIsBluetooth)
+	{
+		hidOutBuffer[0x04] = ptrOutputState->audio.HeadsetVolume;
+		hidOutBuffer[0x05] = ptrOutputState->audio.SpeakerVolume;
+		hidOutBuffer[0x06] = ptrOutputState->audio.MicVolume;
+		hidOutBuffer[0x07] = ptrOutputState->audio.Mode;
+		hidOutBuffer[0x09] = ptrOutputState->audio.MicStatus;
+	}
 	// Mic led
-	hidOutBuffer[0x08] = (unsigned char)ptrOutputState->microphoneLed;
+	hidOutBuffer[0x08] = static_cast<unsigned char>(ptrOutputState->microphoneLed);
+
+	// Advanced Trigger Softness Level and Vibration Soft Rumble Reduce
+	hidOutBuffer[0x24] = static_cast<unsigned char>((ptrOutputState->rumbleSettings.TriggerSoftnessLevel << 4) | (ptrOutputState->rumbleSettings.SoftRumbleReduce & 0x0F));
+	hidOutBuffer[0x26] = 0x04;
 
 	// Player led
 	hidOutBuffer[0x2B] = ptrOutputState->playerLeds.bitmask;
@@ -22,7 +41,6 @@ void __DS5W::Output::createHidOutputBuffer(unsigned char* hidOutBuffer, DS5W::DS
 	}
 
 	// Player led brightness
-	hidOutBuffer[0x26] = 0x03;
 	hidOutBuffer[0x29] = ptrOutputState->disableLeds ? 0x01 : 0x2;
 	hidOutBuffer[0x2A] = ptrOutputState->playerLeds.brightness;
 
