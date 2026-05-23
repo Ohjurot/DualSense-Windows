@@ -23,6 +23,10 @@
 #include <SetupAPI.h>
 #include <hidsdi.h>
 
+#define VENDOR_ID_SONY		0x054C
+#define DEVICE_ID_DS5		0x0CE6
+#define DEVICE_ID_DS5_EDGE 	0x0DF2
+
 DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrLength, unsigned int* requiredLength, bool pointerToArray) {
 	// Check for invalid non expected buffer
 	if (inArrLength && !ptrBuffer) {
@@ -88,7 +92,7 @@ DS5W_API DS5W_ReturnValue DS5W::enumDevices(void* ptrBuffer, unsigned int inArrL
 				}
 
 				// Check if ids match
-				if (vendorId == 0x054C && productId == 0x0CE6) {
+				if (vendorId == VENDOR_ID_SONY && (productId == DEVICE_ID_DS5 || productId == DEVICE_ID_DS5_EDGE)) {
 					// Get pointer to target
 					DS5W::DeviceEnumInfo* ptrInfo = nullptr;
 					if (inputArrIndex < inArrLength) {
